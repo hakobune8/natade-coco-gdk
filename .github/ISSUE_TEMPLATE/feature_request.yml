@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a reusable GDK capability or contract improvement
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Game developer problem
+      description: Explain the reusable problem without game-specific content.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed contract or workflow
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and migration impact
+      description: Cover existing games, Runtime versions, offline use, and deployment safety.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This is reusable across games rather than game-specific logic or content.
+          required: true

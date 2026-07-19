@@ -1,0 +1,59 @@
+name: Bug report
+description: Report a reproducible GDK or generated-game contract defect
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not report vulnerabilities here. Follow SECURITY.md and remove tokens, player data, private hostnames, and IP addresses.
+  - type: input
+    id: version
+    attributes:
+      label: Version or Git revision
+      placeholder: v0.1.0 or full Git SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Template initialization
+        - Game Schema or manifest
+        - Controller SDK
+        - Display SDK
+        - Build or container
+        - Helm or Fleet handoff
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide minimal steps and sanitized output.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: OS, Node, pnpm, Go, browser, Docker
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, tokens, player data, private hostnames, and IP addresses.
+          required: true
+        - label: This report is not a security vulnerability.
+          required: true
