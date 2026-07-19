@@ -46,7 +46,7 @@ export async function initializeGame(options, root = process.cwd()) {
   try {
     for (const [path, value] of replacements) await atomicWrite(path, value);
     run("pnpm", ["install", "--lockfile-only"], repositoryRoot);
-    const remaining = await findIdentity(repositoryRoot, marker.identity, await listTextFiles(repositoryRoot));
+    const remaining = await findIdentity(repositoryRoot, marker.identity, next, await listTextFiles(repositoryRoot));
     if (remaining.length > 0) throw new Error(`old template identity remains in ${remaining.map((path) => path.slice(repositoryRoot.length + 1)).join(", ")}`);
     await atomicWrite(markerPath, `${JSON.stringify({ ...marker, initialized: true, identity: next }, null, 2)}\n`);
   } catch (error) {
@@ -107,18 +107,23 @@ async function listTextFiles(root, directory = root) {
 }
 
 function replaceIdentity(value, current, next) {
-  return value
-    .split(current.repository).join(next.repository)
-    .split(current.description).join(next.description)
-    .split(current.displayName).join(next.displayName)
-    .split(current.gameId).join(next.gameId);
+  const replacements = new Map([
+    [current.repository, next.repository],
+    [current.description, next.description],
+    [current.displayName, next.displayName],
+    [current.gameId, next.gameId]
+  ]);
+  const pattern = new RegExp([...replacements.keys()].sort((left, right) => right.length - left.length).map(escapeRegExp).join("|"), "g");
+  return value.replace(pattern, (match) => replacements.get(match));
 }
 
-async function findIdentity(root, identity, paths) {
+async function findIdentity(root, identity, replacement, paths) {
   const needles = Object.values(identity);
+  const allowed = Object.values(replacement).sort((left, right) => right.length - left.length);
   const found = [];
   for (const path of paths) {
-    const value = await readFile(path, "utf8");
+    let value = await readFile(path, "utf8");
+    for (const token of allowed) value = value.split(token).join("");
     if (needles.some((needle) => value.includes(needle))) found.push(path);
   }
   return found;
@@ -134,6 +139,7 @@ async function optionalRead(path) { try { return await readFile(path, "utf8"); }
 function validateGameID(value) { if (typeof value !== "string" || value.length > 63 || !/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(value)) throw new Error("game ID must be a lower-case DNS label up to 63 characters"); return value; }
 function boundedText(value, label, maximum) { const normalized = String(value).trim(); if (!normalized || normalized.length > maximum || /[\u0000-\u001f]/.test(normalized)) throw new Error(`${label} must contain 1-${maximum} printable characters`); return normalized; }
 function validateRepository(value) { try { const parsed = new URL(value); if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.search || parsed.hash) throw new Error(); return parsed.toString().replace(/\/$/, ""); } catch { throw new Error("repository must be a credential-free HTTPS URL"); } }
+function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 function titleCase(value) { return String(value).split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" "); }
 function run(command, args, cwd) { const result = spawnSync(command, args, { cwd, encoding: "utf8", stdio: "inherit" }); if (result.error?.code === "ENOENT") throw new Error(`${command} is required`); if (result.status !== 0) throw new Error(`${command} ${args.join(" ")} failed`); }
 
