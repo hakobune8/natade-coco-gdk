@@ -10,8 +10,9 @@ descendants own the support policy for their game code and container image.
 ## Report a vulnerability
 
 Do not open a public issue. Use **Report a vulnerability** on the repository's
-Security tab. Upstream maintainers must enable GitHub private vulnerability
-reporting before making the reference repository public.
+Security tab. If that option is unavailable in a game repository created from
+this template, contact its maintainers through a private channel before sharing
+details.
 
 Include the affected revision or tag, impact, reproduction conditions, and a
 minimal proof of concept without real tokens or player data. Maintainers aim to

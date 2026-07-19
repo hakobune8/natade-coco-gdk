@@ -2,9 +2,9 @@
 
 ## Versioning
 
-The reference kit and every generated game use SemVer without a leading `v` in
-package and game metadata. Git tags add the conventional `v` prefix. Never
-publish `latest` or a mutable deployment reference.
+Each game repository uses SemVer without a leading `v` in package and game
+metadata. Git tags add the conventional `v` prefix. Never publish `latest` or a
+mutable deployment reference.
 
 - Patch: compatible fixes and documentation.
 - Minor: backward-compatible features or additive contract support.
@@ -28,7 +28,7 @@ Before tagging a game release:
 1. update `package.json`, `game.yaml`, Chart metadata, image tag, and changelog;
 2. run `make setup validate test lint build release-check`;
 3. run `make container-build` and retain SBOM and vulnerability results;
-4. confirm UI changes have an reviewed contact sheet;
+4. confirm UI changes have a reviewed contact sheet;
 5. hand the exact Git SHA, SemVer, image digest, and evidence to the operator.
 
 The platform operator, not the game repository, approves Fleet targeting and

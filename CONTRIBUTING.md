@@ -1,13 +1,14 @@
 # Contributing
 
-Thank you for improving the natadeCOCO Game Developer Kit.
+Thank you for improving this natadeCOCO game repository.
 
 ## Choose the right repository
 
-- Report starter, SDK integration, schema, CI, or documentation problems to
-  this repository.
-- Keep game-specific rules, art, balance, and deployment requests in the game
-  repository created from this template.
+- Keep this game's rules, art, balance, Display, and Controller changes here.
+- Reproduce reusable starter, SDK, or schema problems against an unmodified GDK
+  before reporting them to the upstream GDK repository.
+- Coordinate Fleet targeting, Registry, RuntimeClass, and production rollout
+  requests with the platform operator rather than adding cluster authority here.
 - Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 ## Development workflow

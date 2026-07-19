@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the reference kit are recorded here. Releases use SemVer.
+All notable changes to this game repository are recorded here. Releases use SemVer.
 
 ## [Unreleased]
 
