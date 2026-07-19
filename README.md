@@ -1,5 +1,7 @@
 # natadeCOCO GDK Reference
 
+[日本語ガイド](README.ja.md) | English
+
 `gdk-reference` is an independently versioned natadeCOCO multiplayer web game.
 It contains no Session Manager, Gateway, Catalog, Launcher, k3s, TLS, or Fleet
 foundation code. The platform contract is limited to `game.yaml`, the
@@ -88,6 +90,11 @@ digest, selects the target profile, and performs the session-aware rollout.
 
 `sandbox.profile: standard` is for reviewed first-party games. Third-party
 games require an Edge-accepted `hardened` RuntimeClass; there is no fallback.
+
+Before a release, run `make release-check` and follow the
+[release policy](docs/release-policy.md). Maintainers of the upstream reference
+also use the [publication checklist](docs/publication-checklist.md) before
+making the GitHub Template Repository public.
 
 ## CI
 
