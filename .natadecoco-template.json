@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "referenceTemplate": true,
+  "initialized": false,
+  "identity": {
+    "gameId": "gdk-reference",
+    "displayName": "natadeCOCO GDK Reference",
+    "description": "Runnable reference for independent natadeCOCO multiplayer games",
+    "repository": "https://github.com/hakobune8/natade-coco-gdk"
+  }
+}

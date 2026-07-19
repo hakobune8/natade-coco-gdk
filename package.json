@@ -1,0 +1,32 @@
+{
+  "name": "natadecoco-game-gdk-reference",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host 127.0.0.1 --port 5176",
+    "test": "tsx --test src/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate": "natadecoco-game-validate game.yaml && node scripts/validate-package.mjs"
+  },
+  "dependencies": {
+    "@natadecoco/controller-sdk": "file:vendor/natadecoco-controller-sdk-0.1.0.tgz",
+    "@natadecoco/display-sdk": "file:vendor/natadecoco-display-sdk-0.1.0.tgz",
+    "@natadecoco/game-schema": "file:vendor/natadecoco-game-schema-0.1.0.tgz",
+    "@natadecoco/protocol": "file:vendor/natadecoco-protocol-0.1.0.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "24.0.15",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3",
+    "vite": "7.0.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "@natadecoco/protocol": "file:vendor/natadecoco-protocol-0.1.0.tgz"
+    }
+  }
+}

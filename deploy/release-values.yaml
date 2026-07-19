@@ -1,0 +1,16 @@
+# Copy reviewed values into deploy/chart/values.yaml before activation. The
+# .invalid repository and zero digest deliberately prevent production use.
+global:
+  requireImageDigest: true
+sandbox:
+  profile: standard
+  runtimeClassName: ""
+gameManifest:
+  metadata:
+    name: gdk-reference
+  spec:
+    version: 0.1.0
+    image:
+      repository: registry.example.invalid/natadecoco/gdk-reference
+      tag: 0.1.0
+      digest: sha256:0000000000000000000000000000000000000000000000000000000000000000

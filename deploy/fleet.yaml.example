@@ -1,0 +1,28 @@
+# Rename to fleet.yaml only after the platform operator replaces every
+# placeholder, approves the image digest, and publishes the shared OCI chart.
+name: natadecoco-game-gdk-reference
+defaultNamespace: natadecoco-games
+labels:
+  natadecoco.io/layer: game
+  natadecoco.io/game-id: gdk-reference
+dependsOn:
+  - selector:
+      matchLabels:
+        natadecoco.io/layer: game-platform
+helm:
+  chart: ./deploy/chart
+  releaseName: gdk-reference
+  atomic: true
+  timeoutSeconds: 300
+targetCustomizations:
+  - name: deny-unreviewed-profile
+    doNotDeploy: true
+    clusterSelector:
+      matchExpressions:
+        - key: natadecoco.io/game-profile
+          operator: NotIn
+          values: [REPLACE_WITH_APPROVED_PROFILE]
+  - name: approved-profile
+    clusterSelector:
+      matchLabels:
+        natadecoco.io/game-profile: REPLACE_WITH_APPROVED_PROFILE

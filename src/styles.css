@@ -1,0 +1,26 @@
+@import "@natadecoco/controller-sdk/safe-area.css";
+@import "@natadecoco/controller-sdk/profiles.css";
+
+:root { color: #f7fbff; background: #081226; font-family: Inter, ui-rounded, "Hiragino Sans", system-ui, sans-serif; font-synthesis: none; }
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; min-height: 100%; margin: 0; }
+body { overflow: hidden; background: radial-gradient(circle at 50% 0%, #173a65 0, #081226 55%, #050a14 100%); user-select: none; -webkit-user-select: none; touch-action: none; }
+button { font: inherit; }
+.loading, .boot-error { display: grid; min-height: 100vh; place-content: center; text-align: center; padding: 2rem; }
+.boot-error h1 { font-size: clamp(2rem, 5vw, 5rem); margin: 0 0 1rem; }
+.eyebrow { color: #79e8ff; font-size: clamp(.75rem, 1.2vw, 1.2rem); font-weight: 900; letter-spacing: .18em; margin: 0 0 .35rem; text-transform: uppercase; }
+.display-shell { min-height: 100vh; padding: clamp(2rem, 4vw, 5rem); display: grid; grid-template-rows: auto 1fr auto; gap: 2.5rem; }
+.display-shell > header { display: flex; align-items: center; justify-content: space-between; }
+.display-shell h1 { font-size: clamp(3rem, 6vw, 7rem); line-height: .95; margin: 0; }
+.timer { width: 8rem; height: 8rem; display: grid; place-content: center; border: 2px solid #79e8ff; border-radius: 50%; color: #79e8ff; font-size: 3.5rem; font-weight: 900; box-shadow: 0 0 35px #15c8f744; }
+.timer small { font-size: .8rem; text-align: center; }
+.player-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; align-items: stretch; }
+.player-card { --accent: #ff5f79; padding: 1.5rem; border: 2px solid color-mix(in srgb, var(--accent), transparent 35%); border-radius: 1.5rem; background: linear-gradient(160deg, color-mix(in srgb, var(--accent), transparent 78%), #0d1a32 65%); box-shadow: 0 20px 60px #0006; display: grid; grid-template-rows: auto auto 1fr auto; }
+.player-card.slot-2 { --accent: #55d6ff; }.player-card.slot-3 { --accent: #ffd35a; }.player-card.slot-4 { --accent: #65ef98; }.player-card.offline { filter: grayscale(1); opacity: .55; }
+.slot { color: var(--accent); font-size: 1.5rem; font-weight: 900; }.player-card h2 { font-size: 1.65rem; margin: .4rem 0; }.direction { align-self: center; text-align: center; font-size: clamp(3rem, 5vw, 6rem); font-weight: 900; }.score { display: flex; justify-content: space-between; color: #a8b8ce; font-weight: 800; }.score strong { color: #fff; font-size: 2rem; }
+.display-shell > footer { color: #a8b8ce; text-align: center; font-size: 1.15rem; }
+.result { place-content: center; text-align: center; }.result > h1 { margin-bottom: 2rem; }.result ol { width: min(800px, 80vw); list-style: none; padding: 0; margin: 0 auto 2rem; display: grid; gap: .8rem; }.result li { display: grid; grid-template-columns: 5rem 1fr; align-items: center; border: 1px solid #ffffff22; border-radius: 1rem; background: #10203a; padding: .9rem 1.5rem; text-align: left; font-size: 1.5rem; }.result li strong { color: #79e8ff; font-size: 2rem; }
+.controller-shell { min-height: 100dvh; padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left)); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: .85rem; }
+.controller-shell header { display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: center; }.controller-shell h1 { font-size: 1.25rem; margin: 0; }.player-badge { display: grid; width: 3.7rem; height: 3.7rem; place-content: center; border-radius: 1.15rem; background: #ff5f79; font-size: 1.35rem; font-weight: 900; }.connection { color: #79e8ff; font-weight: 800; }.guide { margin: 0; color: #b5c5da; text-align: center; }.control-surface { min-height: 0; display: grid; place-items: center; }.controller-shell footer { display: flex; justify-content: space-between; color: #b5c5da; font-weight: 800; }
+@media (max-width: 900px) and (orientation: portrait) { .player-grid { grid-template-columns: repeat(2, 1fr); }.display-shell { overflow: auto; }.controller-shell { grid-template-rows: auto auto minmax(20rem, 1fr) auto; } }
+@media (max-height: 500px) { .controller-shell { grid-template-columns: minmax(13rem, .8fr) 1.4fr; grid-template-rows: auto 1fr auto; }.controller-shell header { grid-column: 1; }.guide { grid-column: 1; }.control-surface { grid-column: 2; grid-row: 1 / 4; }.controller-shell footer { grid-column: 1; } }

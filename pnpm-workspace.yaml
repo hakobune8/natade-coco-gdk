@@ -1,0 +1,7 @@
+packages: []
+
+ignoredBuiltDependencies:
+  - esbuild
+
+# This marker prevents a generated repository located below another pnpm
+# workspace from inheriting the parent workspace and hiding missing packages.
