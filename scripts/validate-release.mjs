@@ -8,8 +8,11 @@ const requiredFiles = [
   "SECURITY.md",
   "SUPPORT.md",
   "CHANGELOG.md",
+  "docs/getting-started.md",
+  "docs/game-development.md",
   "docs/release-policy.md",
-  "docs/publication-checklist.md",
+  "docs/release-handoff.md",
+  "docs/troubleshooting.md",
   ".github/ISSUE_TEMPLATE/bug_report.yml",
   ".github/ISSUE_TEMPLATE/feature_request.yml",
   ".github/ISSUE_TEMPLATE/config.yml",
@@ -36,8 +39,9 @@ assert(marker.schemaVersion === 1 && marker.identity?.gameId && marker.identity?
 assert(platformSet.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(platformSet.source?.revision), "platform set source revision is invalid");
 assert(Object.keys(platformSet.packages ?? {}).length === 4, "platform set must contain four packages");
 assert(files["README.md"].includes("README.ja.md") && files["README.ja.md"].includes("README.md"), "README language links are missing");
+assert(files["README.md"].includes("Use this template") && files["docs/getting-started.md"].includes("make init-game"), "external developer quick start is incomplete");
 assert(files["SECURITY.md"].includes("Report a vulnerability"), "private vulnerability reporting instructions are missing");
-assert(files["docs/publication-checklist.md"].includes("Template repository") && files["docs/publication-checklist.md"].includes("temporary Private repository"), "Template smoke procedure is incomplete");
+assert(files["docs/release-handoff.md"].includes("Developer deliverables") && files["docs/release-handoff.md"].includes("Operator handoff"), "release responsibility boundary is incomplete");
 assert(!/^\s*-?\s*uses:\s*[^\s]+@(?![a-f0-9]{40}(?:\s|$))/m.test(workflow), "GitHub Actions must use full commit SHAs");
 assert(!files["CHANGELOG.md"].includes("TBD"), "changelog contains an unresolved placeholder");
 

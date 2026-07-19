@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/SSLHQ/natade-coco-games",
-    "revision": "033e28045f700430861c80ffde59db4f191006c9"
+    "revision": "1cd78467f22ce24a4cfb9f4d257ae0d95cd22762"
   },
   "packages": {
     "@natadecoco/protocol": {
