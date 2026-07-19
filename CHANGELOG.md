@@ -4,6 +4,8 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-19
+
 - Added the runnable Display and Controller starter.
 - Added one-time game identity initialization for Template descendants.
 - Added exact Protocol, Controller SDK, Display SDK, and Game Schema archives.
