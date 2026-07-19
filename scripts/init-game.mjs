@@ -24,7 +24,7 @@ export async function initializeGame(options, root = process.cwd()) {
     repository: validateRepository(options.repository)
   };
   if (next.gameId === marker.identity.gameId) throw new Error("new game ID must differ from the reference identity");
-  if (Object.values(next).some((value) => Object.values(marker.identity).some((current) => value.includes(current)))) throw new Error("new identity must not retain the reference identity");
+  if (Object.entries(next).some(([field, value]) => value === marker.identity[field])) throw new Error("new identity must not retain the reference identity");
   await assertCleanGit(repositoryRoot);
 
   const paths = await listTextFiles(repositoryRoot);
