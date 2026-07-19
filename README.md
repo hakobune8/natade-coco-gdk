@@ -58,12 +58,19 @@ API or mount platform Secrets into the game.
 
 ## SDK update
 
-The `vendor/*.tgz` files pin the platform contract used when this repository was
-generated. To update, regenerate a disposable game from the desired
-`natade-coco-games` revision, copy all four tarballs together, update the four
-`file:vendor/...` references, run `pnpm install`, and commit the resulting
-lockfile. Never update only one SDK archive without the matching Protocol and
-Game Schema compatibility checks.
+The `vendor/*.tgz` files and `vendor/platform-set.json` pin the exact platform
+revision, versions, filenames, and SHA-256 checksums used by this game. From a
+clean checkout of both repositories, update all four packages atomically:
+
+```bash
+make update-platform PLATFORM_SOURCE=../natade-coco-games
+git diff -- vendor package.json pnpm-lock.yaml
+```
+
+The command builds and packs Protocol, Controller SDK, Display SDK, and Game
+Schema from one clean platform Git revision. It validates the candidate in a
+temporary copy with an offline frozen lockfile before changing this repository.
+Review and commit the resulting compatible set; never copy one archive alone.
 
 When the packages are published to an approved npm Registry, replace the local
 archives with exact released versions; do not use ranges for a production game.
