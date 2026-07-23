@@ -4,8 +4,12 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-23
+
 - Added the bounded catalog/lobby artwork manifest contract.
 - Added one-time Controller handoff completion and stable `/control` return.
+- Completed Controller runs on non-retryable SDK errors without leaking
+  completion acknowledgement failures to the browser.
 - Updated the compatible platform set from the integrated `natade-coco-edge`
   source layout.
 
