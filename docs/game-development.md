@@ -63,9 +63,12 @@ platform sets, and release metadata mismatches.
 - Treat `/control` as the stable platform entry. The Launcher consumes the
   catalog lease, creates or reconnects the player, stores one short-lived
   handoff in `sessionStorage`, and navigates to the exact game Controller path.
-- On `finished`, `terminated`, or terminal `error`, call
-  `completeControllerRun()`. It releases the platform surface and returns to
-  `/control`; do not invent a second lobby or home route.
+- Keep calling the platform control heartbeat while the game Controller is
+  open. This preserves the organizer lease across the game route.
+- On `finished`, `terminated`, or terminal `error`, disable game input and keep
+  the result state visible. The physical Display owns the result dwell and
+  platform completion. Return to `/control` only after the heartbeat reports a
+  mode other than `playing`; do not invent a second lobby or home route.
 
 This v1 top-level handoff intentionally lets the game Controller use the
 Controller SDK directly. A sandboxed iframe/message bridge is a possible

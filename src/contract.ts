@@ -45,6 +45,11 @@ export async function requestDisplayTicket(fetcher: typeof fetch = globalThis.fe
   return { token: value.token, tokenExpiresAt: value.tokenExpiresAt };
 }
 
+export async function completeDisplayRun(fetcher: typeof fetch = globalThis.fetch): Promise<void> {
+  const response = await fetcher("/launcher-api/v1/session/display-complete", { method: "POST", credentials: "same-origin", headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`display completion unavailable: ${response.status}`);
+}
+
 function validIdentifier(value: unknown): value is string { return typeof value === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,127}$/.test(value); }
 function exactControllerURL(value: unknown, origin: string): boolean {
   if (typeof value !== "string") return false;

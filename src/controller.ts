@@ -2,9 +2,23 @@ import { createControllerClient, mountControllerProfileUI, type ControllerClient
 import type { SessionState } from "@natadecoco/protocol";
 import { DISPLAY_NAME, type ControllerHandoff } from "./contract.js";
 
+const PLATFORM_HEARTBEAT_MS = 2_000;
+
 export async function runController(root: HTMLElement, handoff: ControllerHandoff): Promise<void> {
   const client = createControllerClient({ sessionId: handoff.sessionId, playerId: handoff.playerId, token: handoff.token, tokenExpiresAt: handoff.tokenExpiresAt, profile: "directional-pad" });
-  mountController(root, handoff.slot, handoff.displayName, client, () => window.setTimeout(() => { void completeControllerRun().catch(() => undefined); }, 1500));
+  let returning = false;
+  const returnToPlatform = (): void => {
+    if (returning) return;
+    returning = true;
+    window.location.replace("/control");
+  };
+  const maintainLease = async (): Promise<void> => {
+    const mode = await platformControlHeartbeat().catch(() => null);
+    if (mode && mode !== "playing") returnToPlatform();
+  };
+  const heartbeat = window.setInterval(() => void maintainLease(), PLATFORM_HEARTBEAT_MS);
+  mountController(root, handoff.slot, handoff.displayName, client);
+  window.addEventListener("pagehide", () => window.clearInterval(heartbeat), { once: true });
   await client.connect();
 }
 
@@ -53,27 +67,16 @@ export function createControllerLifecycle(onFinished: () => void): {
   };
 }
 
-/**
- * Releases the platform Controller surface and returns through the stable
- * `/control` entry point. The endpoint is deliberately idempotent so games may
- * call it after reconnect or repeated terminal state notifications.
- */
-export async function completeControllerRun(
-  fetcher: typeof fetch = globalThis.fetch,
-  navigate: (path: string) => void = (path) => window.location.replace(path)
-): Promise<void> {
-  try {
-    await fetcher("/launcher-api/v1/control/complete", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { Accept: "application/json" }
-    });
-  } catch {
-    // Returning to the stable platform entry is more important than surfacing
-    // a best-effort completion acknowledgement failure in the browser.
-  } finally {
-    navigate("/control");
-  }
+export async function platformControlHeartbeat(fetcher: typeof fetch = globalThis.fetch): Promise<"catalog" | "lobby" | "playing"> {
+  const response = await fetcher("/launcher-api/v1/control/heartbeat", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { Accept: "application/json" }
+  });
+  if (!response.ok) throw new Error(`platform heartbeat unavailable: ${response.status}`);
+  const value = await response.json() as { mode?: unknown };
+  if (value.mode !== "catalog" && value.mode !== "lobby" && value.mode !== "playing") throw new Error("invalid platform heartbeat");
+  return value.mode;
 }
 
 function required<T extends Element>(root: HTMLElement, selector: string): T { const value = root.querySelector<T>(selector); if (!value) throw new Error(`missing ${selector}`); return value; }

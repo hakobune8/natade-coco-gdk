@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { completeControllerRun, createControllerLifecycle } from "./controller.js";
+import { createControllerLifecycle, platformControlHeartbeat } from "./controller.js";
 
 test("coalesces duplicate terminal notifications into one completion", () => {
   let completions = 0;
@@ -33,21 +33,20 @@ test("completes on a non-retryable SDK error", () => {
   assert.equal(completions, 1);
 });
 
-test("releases the platform Controller surface before returning home", async () => {
-  const requests: Array<{ path: string; init: RequestInit | undefined }> = [];
-  const navigation: string[] = [];
-  await completeControllerRun(async (path, init) => {
-    requests.push({ path: String(path), init });
-    return new Response(null, { status: 204 });
-  }, (path) => navigation.push(path));
-  assert.equal(requests[0]?.path, "/launcher-api/v1/control/complete");
-  assert.equal(requests[0]?.init?.method, "POST");
-  assert.equal(requests[0]?.init?.credentials, "same-origin");
-  assert.deepEqual(navigation, ["/control"]);
+test("keeps the platform control lease alive while the game controller is open", async () => {
+  let endpoint = "";
+  let init: RequestInit | undefined;
+  const mode = await platformControlHeartbeat(async (path, options) => {
+    endpoint = String(path);
+    init = options;
+    return new Response(JSON.stringify({ mode: "playing" }), { status: 200, headers: { "Content-Type": "application/json" } });
+  });
+  assert.equal(mode, "playing");
+  assert.equal(endpoint, "/launcher-api/v1/control/heartbeat");
+  assert.equal(init?.method, "POST");
+  assert.equal(init?.credentials, "same-origin");
 });
 
-test("absorbs completion failure and returns home without an unhandled rejection", async () => {
-  const navigation: string[] = [];
-  await completeControllerRun(async () => { throw new Error("offline"); }, (path) => navigation.push(path));
-  assert.deepEqual(navigation, ["/control"]);
+test("rejects an invalid platform heartbeat response", async () => {
+  await assert.rejects(platformControlHeartbeat(async () => new Response(JSON.stringify({ mode: "unknown" }), { status: 200 })), /invalid platform heartbeat/u);
 });
