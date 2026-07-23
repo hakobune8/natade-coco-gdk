@@ -4,6 +4,8 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-23
+
 - Keep the platform organizer lease alive while a game Controller is open.
 - Make the physical Display own result dwell and platform run completion.
 - Return Controllers to `/control` only after the platform leaves `playing`.
