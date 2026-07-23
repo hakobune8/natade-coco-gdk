@@ -1,6 +1,6 @@
 import { createDisplayClient } from "@natadecoco/display-sdk";
 import type { InputState, Player, Ranking } from "@natadecoco/protocol";
-import { DISPLAY_NAME, type LaunchContext, requestDisplayTicket } from "./contract.js";
+import { completeDisplayRun, DISPLAY_NAME, type LaunchContext, requestDisplayTicket } from "./contract.js";
 
 const GAME_DURATION_MS = 60_000;
 const RESULT_DURATION_MS = 10_000;
@@ -31,7 +31,9 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
       const rankings = rank(players, scores);
       renderResults(root, rankings, players);
       void client.finishGame({ runId: snapshot.runId!, rankings });
-      window.setTimeout(() => window.location.replace("/launcher/"), RESULT_DURATION_MS);
+      window.setTimeout(() => {
+        void completeDisplayRun().catch(() => undefined).finally(() => window.location.replace("/launcher/"));
+      }, RESULT_DURATION_MS);
       return;
     }
     window.requestAnimationFrame(frame);
