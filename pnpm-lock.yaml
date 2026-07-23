@@ -204,12 +204,12 @@ packages:
     version: 0.1.0
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
-    resolution: {integrity: sha512-E6tPuEXcERXlBOh6bh90VtkYSYibsw45ZHOcEL0Hgyu78ArBBrj24fHW2niq33Bcnaq8/EecbxfL5DZ2Vlwfow==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
+    resolution: {integrity: sha512-GJ74xIf9zTpr+RQUx8ObNJ74fXCdqu4FH5HHooRcPSkCB4bXYnOb+8KngcfwDAHn6jIhEckj/n041KhHVpOO2Q==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
     version: 0.1.0
     hasBin: true
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz':
-    resolution: {integrity: sha512-CmbkREA0uX1KDcJb1fWl9x4fs8ihkmWzgVazqG6/eIobW3HW3tWaQlePj9Ogjj92pucFdC3q6wJLMuqn5LEcnA==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
+    resolution: {integrity: sha512-IbwMJbqHycXmBR7pbJHyNfU/73eEHyBmx1B1zks4BWLSSEhqS7yJVWLJ7wQDr43u1LOSTdcJrAvCE/o0XRoRsw==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
     version: 0.1.0
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
