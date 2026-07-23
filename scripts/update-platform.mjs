@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -12,11 +12,16 @@ const packageNames = ["protocol", "controller-sdk", "display-sdk", "game-schema"
 
 try {
   const source = resolve(process.argv[2] ?? "");
-  if (!process.argv[2]) throw new Error("usage: node scripts/update-platform.mjs <natade-coco-games-path>");
+  if (!process.argv[2]) throw new Error("usage: node scripts/update-platform.mjs <natade-coco-edge-path>");
+  const platformRoot = await directoryExists(join(source, "game-platform", "packages"))
+    ? join(source, "game-platform")
+    : source;
+  if (!(await directoryExists(join(platformRoot, "packages")))) throw new Error("game-platform/packages is missing from the platform source");
+  const sourceRepositoryRoot = output("git", ["rev-parse", "--show-toplevel"], platformRoot).trim();
   assertClean(repositoryRoot, "game repository");
-  assertClean(source, "platform source");
-  const revision = output("git", ["rev-parse", "HEAD"], source).trim();
-  const repository = normalizeRemote(output("git", ["config", "--get", "remote.origin.url"], source).trim());
+  assertClean(sourceRepositoryRoot, "platform source");
+  const revision = output("git", ["rev-parse", "HEAD"], sourceRepositoryRoot).trim();
+  const repository = normalizeRemote(output("git", ["config", "--get", "remote.origin.url"], sourceRepositoryRoot).trim());
   if (!/^[a-f0-9]{40}$/.test(revision)) throw new Error("platform source revision is not a full Git SHA");
 
   const temporaryRoot = await mkdtemp(join(tmpdir(), "natadecoco-platform-update-"));
@@ -30,14 +35,14 @@ try {
     await mkdir(packed, { recursive: true });
 
     for (const name of packageNames) {
-      run("pnpm", ["--filter", `@natadecoco/${name}`, "build"], source);
-      run("pnpm", ["--filter", `@natadecoco/${name}`, "pack", "--pack-destination", packed], source);
+      run("pnpm", ["--filter", `@natadecoco/${name}`, "build"], platformRoot);
+      run("pnpm", ["--filter", `@natadecoco/${name}`, "pack", "--pack-destination", packed], platformRoot);
     }
     const archives = await readdir(packed);
     const records = {};
     for (const name of packageNames) {
       const file = oneArchive(archives, `natadecoco-${name}-`);
-      const metadata = JSON.parse(await readFile(join(source, "packages", name, "package.json"), "utf8"));
+      const metadata = JSON.parse(await readFile(join(platformRoot, "packages", name, "package.json"), "utf8"));
       if (metadata.name !== `@natadecoco/${name}` || typeof metadata.version !== "string") throw new Error(`invalid package metadata for ${name}`);
       records[metadata.name] = {
         version: metadata.version,
@@ -75,6 +80,15 @@ try {
 } catch (error) {
   console.error(`ERROR: ${error.message}`);
   process.exitCode = 1;
+}
+
+async function directoryExists(path) {
+  try {
+    return (await stat(path)).isDirectory();
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
 }
 
 function assertClean(path, label) {
