@@ -10,7 +10,7 @@ body:
     id: version
     attributes:
       label: Version or Git revision
-      placeholder: v0.1.0 or full Git SHA
+      placeholder: v0.2.0 or full Git SHA
     validations:
       required: true
   - type: dropdown
