@@ -4,13 +4,13 @@ import { DISPLAY_NAME, type ControllerHandoff } from "./contract.js";
 
 export async function runController(root: HTMLElement, handoff: ControllerHandoff): Promise<void> {
   const client = createControllerClient({ sessionId: handoff.sessionId, playerId: handoff.playerId, token: handoff.token, tokenExpiresAt: handoff.tokenExpiresAt, profile: "directional-pad" });
-  mountController(root, handoff.slot, handoff.displayName, client);
+  mountController(root, handoff.slot, handoff.displayName, client, () => window.setTimeout(() => void completeControllerRun(), 1500));
   await client.connect();
 }
 
 export function runControllerPreview(root: HTMLElement): void { mountController(root, 2, "Player 2"); }
 
-function mountController(root: HTMLElement, slot: number, playerName: string, client?: ControllerClient): void {
+function mountController(root: HTMLElement, slot: number, playerName: string, client?: ControllerClient, onFinished?: () => void): void {
   root.innerHTML = `<section class="controller-shell natadecoco-safe-area">
     <header><span class="player-badge">${slot}P</span><div><p class="eyebrow">${DISPLAY_NAME}</p><h1>${escapeText(playerName)}</h1></div><span class="connection" role="status">${client ? "接続中" : "プレビュー"}</span></header>
     <p class="guide">大画面を見ながら方向パッドで操作してください</p>
@@ -23,12 +23,40 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
   const latency = required<HTMLElement>(root, ".latency");
   const controls = mountControllerProfileUI({ element: surface, profile: "directional-pad", disabled: Boolean(client), onInput: (input) => { client?.sendInput(input); if (input.buttons?.action1) client?.vibrate(20); } });
   const removeTouchGuards = client?.installTouchGuards(surface);
+  let finishNotified = false;
   const unsubscribers = client ? [
     client.onStateChanged((state) => { const online = state.state === "connected"; connection.textContent = online ? "オンライン" : state.state === "reconnecting" ? "再接続中" : "接続中"; latency.textContent = `PING ${state.roundTripMs === undefined ? "--" : Math.round(state.roundTripMs)} ms`; controls.setDisabled(!online); }),
-    client.onSessionStateChanged((state: SessionState) => { session.textContent = state === "playing" ? "プレイ中" : state === "waiting" ? "参加待ち" : state; controls.setDisabled(state !== "playing"); })
+    client.onSessionStateChanged((state: SessionState) => {
+      session.textContent = state === "playing" ? "プレイ中" : state === "waiting" ? "参加待ち" : state;
+      controls.setDisabled(state !== "playing");
+      if (!finishNotified && ["finished", "terminated", "error"].includes(state)) {
+        finishNotified = true;
+        onFinished?.();
+      }
+    })
   ] : [];
   surface.addEventListener("pointerdown", () => { void client?.requestWakeLock(); }, { once: true });
   window.addEventListener("pagehide", () => { unsubscribers.forEach((remove) => remove()); removeTouchGuards?.(); controls.destroy(); client?.disconnect("controller page hidden"); }, { once: true });
+}
+
+/**
+ * Releases the platform Controller surface and returns through the stable
+ * `/control` entry point. The endpoint is deliberately idempotent so games may
+ * call it after reconnect or repeated terminal state notifications.
+ */
+export async function completeControllerRun(
+  fetcher: typeof fetch = globalThis.fetch,
+  navigate: (path: string) => void = (path) => window.location.replace(path)
+): Promise<void> {
+  try {
+    await fetcher("/launcher-api/v1/control/complete", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { Accept: "application/json" }
+    });
+  } finally {
+    navigate("/control");
+  }
 }
 
 function required<T extends Element>(root: HTMLElement, selector: string): T { const value = root.querySelector<T>(selector); if (!value) throw new Error(`missing ${selector}`); return value; }

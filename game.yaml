@@ -5,6 +5,12 @@ metadata:
 spec:
   displayName: natadeCOCO GDK Reference
   description: Runnable reference for independent natadeCOCO multiplayer games
+  # Optional until artwork is ready. Both files must be bundled under the
+  # game-owned raster asset route; the Launcher supplies a safe fallback.
+  # presentation:
+  #   catalogArtworkPath: /games/gdk-reference/assets/catalog.webp
+  #   lobbyArtworkPath: /games/gdk-reference/assets/lobby.webp
+  #   accentColor: "#56D6B8"
   version: 0.1.0
   runtimeCompatibility: ">=1.0.0 <2.0.0"
   image:

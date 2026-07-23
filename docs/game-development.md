@@ -23,6 +23,25 @@ Keep `game.yaml` accurate as behavior changes:
 - session duration and result time: values covered by tests;
 - `runtimeCompatibility`: the supported Runtime major range.
 
+### Artwork contract
+
+Games may provide Launcher-owned presentation metadata without giving the
+Launcher executable markup:
+
+```yaml
+presentation:
+  catalogArtworkPath: /games/my-game/assets/catalog.webp
+  lobbyArtworkPath: /games/my-game/assets/lobby.webp
+  accentColor: "#56D6B8"
+```
+
+Artwork must be a bundled AVIF, JPEG, PNG, or WebP file below the exact
+`/games/<game-id>/assets/` route. `catalogArtworkPath` should use a 16:9-safe
+composition; `lobbyArtworkPath` should remain readable beneath left and bottom
+status overlays. The Launcher renders a deterministic fallback when the block
+is absent. SVG, remote URLs, HTML, and CSS values other than the six-digit
+accent color are rejected.
+
 `make validate` rejects unknown fields, route drift, version drift, incomplete
 platform sets, and release metadata mismatches.
 
@@ -41,6 +60,16 @@ platform sets, and release metadata mismatches.
 - Respect safe areas and test portrait and landscape where declared.
 - Treat vibration, Wake Lock, orientation, and fullscreen as optional features.
 - Never put a token or reconnect handle in a URL or localStorage.
+- Treat `/control` as the stable platform entry. The Launcher consumes the
+  catalog lease, creates or reconnects the player, stores one short-lived
+  handoff in `sessionStorage`, and navigates to the exact game Controller path.
+- On `finished`, `terminated`, or terminal `error`, call
+  `completeControllerRun()`. It releases the platform surface and returns to
+  `/control`; do not invent a second lobby or home route.
+
+This v1 top-level handoff intentionally lets the game Controller use the
+Controller SDK directly. A sandboxed iframe/message bridge is a possible
+future security boundary, not a requirement of this contract.
 
 ## Offline and security boundary
 
@@ -49,6 +78,12 @@ during play. The game Pod has no Kubernetes API credentials, platform Secret,
 host namespace, or game-to-game network requirement. The release container runs
 non-root with a read-only filesystem and no Linux capabilities through the
 shared platform Chart.
+
+Persistent Spot progress is also a future platform capability. A game may
+submit only the normal bounded run result today; it must not retain platform
+credentials, call Kubernetes, or write directly to a central database. A
+future Results SDK will own trusted `spotId`, idempotent `runId`, durable outbox,
+and synchronization semantics.
 
 ## Testing strategy
 

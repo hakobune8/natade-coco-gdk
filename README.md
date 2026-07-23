@@ -59,6 +59,7 @@ Join Page; credentials are never placed in URLs.
 | `src/styles.css` | Display and responsive phone layout |
 | `game.yaml` | Players, duration, browser features, routes, and compatibility |
 | `src/contract.test.ts` | Game-specific launch and handoff contract tests |
+| `src/controller.test.ts` | Controller completion and stable `/control` return tests |
 
 The starter uses simple Canvas/CSS visuals so you can replace the game without
 untangling platform code. Read [Developing a game](docs/game-development.md) for
@@ -80,16 +81,19 @@ make container-build
 Provide the operator with the SemVer version, reviewed Git SHA, immutable image
 digest, SBOMs, vulnerability result, and a contact sheet for visible UI changes.
 Publishing an image does not deploy it. Fleet targeting, Registry values,
-RuntimeClass selection, and rollout approval remain operator actions. See
+RuntimeClass selection, and rollout approval remain operator actions. A
+game-owned Controller receives a one-time Launcher handoff and returns to the
+shared `/control` entry when the run ends. See
+[Developing a game](docs/game-development.md) and
 [Release handoff](docs/release-handoff.md).
 
 ## Update the platform contract
 
 Protocol, Controller SDK, Display SDK, and Game Schema must move as one tested
-set. From clean game and `natade-coco-games` checkouts:
+set. From clean game and `natade-coco-edge` checkouts:
 
 ```bash
-make update-platform PLATFORM_SOURCE=../natade-coco-games
+make update-platform PLATFORM_SOURCE=../natade-coco-edge
 git diff -- vendor package.json pnpm-lock.yaml
 ```
 
