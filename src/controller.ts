@@ -1,10 +1,10 @@
-import { createControllerClient, mountControllerProfileUI, type ControllerClient } from "@natadecoco/controller-sdk";
+import { createControllerClient, mountControllerProfileUI, type ControllerClient, type ControllerSdkError } from "@natadecoco/controller-sdk";
 import type { SessionState } from "@natadecoco/protocol";
 import { DISPLAY_NAME, type ControllerHandoff } from "./contract.js";
 
 export async function runController(root: HTMLElement, handoff: ControllerHandoff): Promise<void> {
   const client = createControllerClient({ sessionId: handoff.sessionId, playerId: handoff.playerId, token: handoff.token, tokenExpiresAt: handoff.tokenExpiresAt, profile: "directional-pad" });
-  mountController(root, handoff.slot, handoff.displayName, client, () => window.setTimeout(() => void completeControllerRun(), 1500));
+  mountController(root, handoff.slot, handoff.displayName, client, () => window.setTimeout(() => { void completeControllerRun().catch(() => undefined); }, 1500));
   await client.connect();
 }
 
@@ -23,20 +23,34 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
   const latency = required<HTMLElement>(root, ".latency");
   const controls = mountControllerProfileUI({ element: surface, profile: "directional-pad", disabled: Boolean(client), onInput: (input) => { client?.sendInput(input); if (input.buttons?.action1) client?.vibrate(20); } });
   const removeTouchGuards = client?.installTouchGuards(surface);
-  let finishNotified = false;
+  const lifecycle = createControllerLifecycle(() => onFinished?.());
   const unsubscribers = client ? [
     client.onStateChanged((state) => { const online = state.state === "connected"; connection.textContent = online ? "オンライン" : state.state === "reconnecting" ? "再接続中" : "接続中"; latency.textContent = `PING ${state.roundTripMs === undefined ? "--" : Math.round(state.roundTripMs)} ms`; controls.setDisabled(!online); }),
     client.onSessionStateChanged((state: SessionState) => {
       session.textContent = state === "playing" ? "プレイ中" : state === "waiting" ? "参加待ち" : state;
       controls.setDisabled(state !== "playing");
-      if (!finishNotified && ["finished", "terminated", "error"].includes(state)) {
-        finishNotified = true;
-        onFinished?.();
-      }
-    })
+      lifecycle.onSessionState(state);
+    }),
+    client.onError((error) => lifecycle.onError(error))
   ] : [];
   surface.addEventListener("pointerdown", () => { void client?.requestWakeLock(); }, { once: true });
   window.addEventListener("pagehide", () => { unsubscribers.forEach((remove) => remove()); removeTouchGuards?.(); controls.destroy(); client?.disconnect("controller page hidden"); }, { once: true });
+}
+
+export function createControllerLifecycle(onFinished: () => void): {
+  onSessionState: (state: SessionState) => void;
+  onError: (error: Pick<ControllerSdkError, "retryable">) => void;
+} {
+  let finished = false;
+  const finishOnce = (): void => {
+    if (finished) return;
+    finished = true;
+    onFinished();
+  };
+  return {
+    onSessionState: (state) => { if (["finished", "terminated", "error"].includes(state)) finishOnce(); },
+    onError: (error) => { if (!error.retryable) finishOnce(); }
+  };
 }
 
 /**
@@ -54,6 +68,9 @@ export async function completeControllerRun(
       credentials: "same-origin",
       headers: { Accept: "application/json" }
     });
+  } catch {
+    // Returning to the stable platform entry is more important than surfacing
+    // a best-effort completion acknowledgement failure in the browser.
   } finally {
     navigate("/control");
   }
