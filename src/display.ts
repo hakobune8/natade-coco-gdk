@@ -1,6 +1,7 @@
 import { createDisplayClient } from "@natadecoco/display-sdk";
 import type { InputState, Player, Ranking } from "@natadecoco/protocol";
 import { completeDisplayRun, DISPLAY_NAME, type LaunchContext, requestDisplayTicket } from "./contract.js";
+import { scheduleDeadline } from "./deadline.js";
 
 const GAME_DURATION_MS = 60_000;
 const RESULT_DURATION_MS = 10_000;
@@ -13,6 +14,8 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
   const pressed = new Set<string>();
   let players: readonly Player[] = [];
   let finished = false;
+  let cancelGameDeadline: (() => void) | undefined;
+  let resultTimer: number | undefined;
   client.onSnapshot((snapshot) => { players = snapshot.players; for (const [playerID, latest] of Object.entries(snapshot.latestInputs)) inputs.set(playerID, latest.input); });
   client.onPlayerJoined((player) => { players = replacePlayer(players, player); });
   client.onPlayerLeft((player) => { players = replacePlayer(players, player); });
@@ -23,23 +26,34 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
   if (snapshot.state !== "playing" || !snapshot.runId) throw new Error("session is not playing");
   players = snapshot.players;
   const startedAt = snapshot.startedAt ? Date.parse(snapshot.startedAt) : Date.now();
+  const finish = (): void => {
+    if (finished) return;
+    finished = true;
+    cancelGameDeadline?.();
+    cancelGameDeadline = undefined;
+    const rankings = rank(players, scores);
+    renderResults(root, rankings, players);
+    void client.finishGame({ runId: snapshot.runId!, rankings });
+    resultTimer = window.setTimeout(() => {
+      void completeDisplayRun().catch(() => undefined).finally(() => window.location.replace("/launcher/"));
+    }, RESULT_DURATION_MS);
+  };
+  cancelGameDeadline = scheduleDeadline(startedAt, GAME_DURATION_MS, finish);
   const frame = (): void => {
     const remaining = Math.max(0, GAME_DURATION_MS - (Date.now() - startedAt));
     renderDisplay(root, players, inputs, scores, remaining);
-    if (remaining === 0 && !finished) {
-      finished = true;
-      const rankings = rank(players, scores);
-      renderResults(root, rankings, players);
-      void client.finishGame({ runId: snapshot.runId!, rankings });
-      window.setTimeout(() => {
-        void completeDisplayRun().catch(() => undefined).finally(() => window.location.replace("/launcher/"));
-      }, RESULT_DURATION_MS);
+    if (remaining === 0) {
+      finish();
       return;
     }
     window.requestAnimationFrame(frame);
   };
   window.requestAnimationFrame(frame);
-  window.addEventListener("pagehide", () => client.disconnect("display page hidden"), { once: true });
+  window.addEventListener("pagehide", () => {
+    cancelGameDeadline?.();
+    if (resultTimer !== undefined) window.clearTimeout(resultTimer);
+    client.disconnect("display page hidden");
+  }, { once: true });
 }
 
 export function runDisplayPreview(root: HTMLElement, result = false): void {

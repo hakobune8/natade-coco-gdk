@@ -20,7 +20,8 @@ Keep `game.yaml` accurate as behavior changes:
 - `orientation`: the layouts the Controller actually supports;
 - `browserFeatures.required`: only features without which the game cannot run;
 - `browserFeatures.optional`: features that degrade safely;
-- session duration and result time: values covered by tests;
+- session duration and result time: values owned by the game and covered by
+  tests;
 - `runtimeCompatibility`: the supported Runtime major range.
 
 ### Artwork contract
@@ -50,6 +51,10 @@ platform sets, and release metadata mismatches.
 - Design for 1920×1080, but keep layout stable at smaller development sizes.
 - Rebuild from the SDK snapshot after reload or reconnect.
 - Keep game completion idempotent and bound to the current run.
+- Schedule the gameplay deadline from the wall clock independently of rendering
+  or `requestAnimationFrame`, then submit `finishGame` exactly once. The Runtime
+  does not turn `gameDurationSeconds` into a normal gameplay timeout; a game's
+  `finishGame` call is the authority for normal completion.
 - Return to the Launcher through the supported result/lifecycle flow.
 - Do not expose internal error details to players.
 
