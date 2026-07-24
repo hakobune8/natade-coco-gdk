@@ -55,6 +55,8 @@ platform sets, and release metadata mismatches.
   or `requestAnimationFrame`, then submit `finishGame` exactly once. The Runtime
   does not turn `gameDurationSeconds` into a normal gameplay timeout; a game's
   `finishGame` call is the authority for normal completion.
+- Rankings require unique player IDs, but multiple players may share the same
+  rank. Cooperative games may report every participant as rank 1.
 - Return to the Launcher through the supported result/lifecycle flow.
 - Do not expose internal error details to players.
 

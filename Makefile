@@ -43,7 +43,7 @@ dev: ## Start the Display/Controller preview server
 	@$(PNPM) dev
 
 container-build: ## Build the immutable game image locally
-	@docker build --build-arg VERSION=0.4.0 --build-arg REVISION=$$(git rev-parse HEAD 2>/dev/null || echo unknown) -t gdk-reference:0.4.0 .
+	@docker build --build-arg VERSION=0.5.0 --build-arg REVISION=$$(git rev-parse HEAD 2>/dev/null || echo unknown) -t gdk-reference:0.5.0 .
 
 clean: ## Remove generated build output
 	@rm -r dist 2>/dev/null || true

@@ -4,6 +4,11 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-24
+
+- Allow cooperative games to submit tied rankings such as all players at rank 1.
+- Update the vendored platform SDK set to the tied-ranking Edge contract.
+
 ## [0.4.0] - 2026-07-24
 
 - Make the game `finishGame` call the sole authority for normal completion.

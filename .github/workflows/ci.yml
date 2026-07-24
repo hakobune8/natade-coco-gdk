@@ -41,7 +41,7 @@ jobs:
           push: false
           tags: gdk-reference:ci
           build-args: |
-            VERSION=0.4.0
+            VERSION=0.5.0
             REVISION=${{ github.sha }}
       - uses: anchore/sbom-action/download-syft@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
       - name: Generate SBOMs
