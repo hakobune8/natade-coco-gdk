@@ -4,6 +4,12 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-24
+
+- Make the game `finishGame` call the sole authority for normal completion.
+- Schedule the reference game's deadline independently from animation frames.
+- Update the compatible Edge source revision for the finish-authority contract.
+
 ## [0.3.0] - 2026-07-23
 
 - Keep the platform organizer lease alive while a game Controller is open.
