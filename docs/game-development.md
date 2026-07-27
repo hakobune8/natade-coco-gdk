@@ -72,10 +72,20 @@ platform sets, and release metadata mismatches.
   handoff in `sessionStorage`, and navigates to the exact game Controller path.
 - Keep calling the platform control heartbeat while the game Controller is
   open. This preserves the organizer lease across the game route.
-- On `finished`, `terminated`, or terminal `error`, disable game input and keep
-  the result state visible. The physical Display owns the result dwell and
-  platform completion. Return to `/control` only after the heartbeat reports a
-  mode other than `playing`; do not invent a second lobby or home route.
+- The game owns its result UX. On `finished`, disable game input and keep the
+  result visible while the organizer chooses **Play again** or **End game**.
+- Show rematch/end actions only when the platform heartbeat says
+  `role: organizer` and `hasLease: true`. Never infer organizer authority from
+  player slot, a query parameter, or game-local storage.
+- Rematch calls the organizer-authorized platform endpoint, retains the player
+  roster, and creates a fresh run ID. Rebuild all run-scoped game state from
+  zero when that run appears.
+- End game terminates the session and returns every surface to Launcher.
+  `resultDisplaySeconds` is a fail-safe window, not an automatic game-owned
+  redirect.
+- On `terminated` or terminal `error`, disable input and return to `/control`
+  after the heartbeat reports a mode other than `playing`; do not invent a
+  second lobby or home route.
 
 This v1 top-level handoff intentionally lets the game Controller use the
 Controller SDK directly. A sandboxed iframe/message bridge is a possible

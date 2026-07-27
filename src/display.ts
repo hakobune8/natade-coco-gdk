@@ -1,10 +1,9 @@
 import { createDisplayClient } from "@natadecoco/display-sdk";
 import type { InputState, Player, Ranking } from "@natadecoco/protocol";
-import { completeDisplayRun, DISPLAY_NAME, type LaunchContext, requestDisplayTicket } from "./contract.js";
-import { scheduleDeadline } from "./deadline.js";
+import { DISPLAY_NAME, platformSession, type LaunchContext, requestDisplayTicket } from "./contract.js";
 
 const GAME_DURATION_MS = 60_000;
-const RESULT_DURATION_MS = 10_000;
+const PLATFORM_POLL_MS = 2_000;
 
 export async function runDisplay(root: HTMLElement, launch: LaunchContext): Promise<void> {
   const ticket = await requestDisplayTicket();
@@ -14,8 +13,6 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
   const pressed = new Set<string>();
   let players: readonly Player[] = [];
   let finished = false;
-  let cancelGameDeadline: (() => void) | undefined;
-  let resultTimer: number | undefined;
   client.onSnapshot((snapshot) => { players = snapshot.players; for (const [playerID, latest] of Object.entries(snapshot.latestInputs)) inputs.set(playerID, latest.input); });
   client.onPlayerJoined((player) => { players = replacePlayer(players, player); });
   client.onPlayerLeft((player) => { players = replacePlayer(players, player); });
@@ -26,34 +23,38 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
   if (snapshot.state !== "playing" || !snapshot.runId) throw new Error("session is not playing");
   players = snapshot.players;
   const startedAt = snapshot.startedAt ? Date.parse(snapshot.startedAt) : Date.now();
-  const finish = (): void => {
-    if (finished) return;
-    finished = true;
-    cancelGameDeadline?.();
-    cancelGameDeadline = undefined;
-    const rankings = rank(players, scores);
-    renderResults(root, rankings, players);
-    void client.finishGame({ runId: snapshot.runId!, rankings });
-    resultTimer = window.setTimeout(() => {
-      void completeDisplayRun().catch(() => undefined).finally(() => window.location.replace("/launcher/"));
-    }, RESULT_DURATION_MS);
-  };
-  cancelGameDeadline = scheduleDeadline(startedAt, GAME_DURATION_MS, finish);
   const frame = (): void => {
     const remaining = Math.max(0, GAME_DURATION_MS - (Date.now() - startedAt));
     renderDisplay(root, players, inputs, scores, remaining);
-    if (remaining === 0) {
-      finish();
+    if (remaining === 0 && !finished) {
+      finished = true;
+      const rankings = rank(players, scores);
+      renderResults(root, rankings, players);
+      void client.finishGame({ runId: snapshot.runId!, rankings }).then(() => {
+        waitForOrganizer(snapshot.runId!);
+      }).catch(() => undefined);
       return;
     }
     window.requestAnimationFrame(frame);
   };
   window.requestAnimationFrame(frame);
-  window.addEventListener("pagehide", () => {
-    cancelGameDeadline?.();
-    if (resultTimer !== undefined) window.clearTimeout(resultTimer);
-    client.disconnect("display page hidden");
-  }, { once: true });
+  window.addEventListener("pagehide", () => client.disconnect("display page hidden"), { once: true });
+}
+
+function waitForOrganizer(finishedRunId: string): void {
+  const poll = async (): Promise<void> => {
+    const session = await platformSession().catch(() => null);
+    if (session?.state === "playing" && session.runId && session.runId !== finishedRunId) {
+      window.location.reload();
+      return;
+    }
+    if (!session || session.state === "terminated" || session.state === "error") {
+      window.location.replace("/launcher/");
+      return;
+    }
+    window.setTimeout(() => void poll(), PLATFORM_POLL_MS);
+  };
+  void poll();
 }
 
 export function runDisplayPreview(root: HTMLElement, result = false): void {
@@ -67,7 +68,7 @@ function renderDisplay(root: HTMLElement, players: readonly Player[], inputs: Re
   root.innerHTML = `<section class="display-shell"><header><div><p class="eyebrow">GAME DEVELOPER KIT</p><h1>${DISPLAY_NAME}</h1></div><div class="timer">${Math.ceil(remaining / 1000)}<small>秒</small></div></header><div class="player-grid">${players.map((player) => playerCard(player, inputs.get(player.playerId), scores.get(player.playerId) ?? 0)).join("")}</div><footer>方向入力とACTIONを受信中 · この画面をゲームロジックに置き換えてください</footer></section>`;
 }
 function renderResults(root: HTMLElement, rankings: readonly Ranking[], players: readonly Player[]): void {
-  root.innerHTML = `<section class="display-shell result"><p class="eyebrow">GAME FINISHED</p><h1>ランキング</h1><ol>${rankings.map((ranking) => `<li><strong>${ranking.rank}</strong><span>${escapeText(players.find((player) => player.playerId === ranking.playerId)?.displayName ?? ranking.playerId)}</span></li>`).join("")}</ol><p>10秒後にランチャーへ戻ります</p></section>`;
+  root.innerHTML = `<section class="display-shell result"><p class="eyebrow">GAME FINISHED</p><h1>ランキング</h1><ol>${rankings.map((ranking) => `<li><strong>${ranking.rank}</strong><span>${escapeText(players.find((player) => player.playerId === ranking.playerId)?.displayName ?? ranking.playerId)}</span></li>`).join("")}</ol><p>主催者が「もう一度遊ぶ」または「ゲームを終了」を選びます</p></section>`;
 }
 function playerCard(player: Player, input: InputState | undefined, score: number): string { const direction = [input?.buttons?.up && "↑", input?.buttons?.down && "↓", input?.buttons?.left && "←", input?.buttons?.right && "→"].filter(Boolean).join(" ") || "•"; return `<article class="player-card slot-${Math.min(player.slot, 4)} ${player.connected ? "" : "offline"}"><span class="slot">${player.slot}P</span><h2>${escapeText(player.displayName)}</h2><div class="direction">${direction}</div><div class="score">ACTION <strong>${score}</strong></div></article>`; }
 function rank(players: readonly Player[], scores: ReadonlyMap<string, number>): Ranking[] { return [...players].sort((left, right) => (scores.get(right.playerId) ?? 0) - (scores.get(left.playerId) ?? 0) || left.slot - right.slot).map((player, index) => ({ playerId: player.playerId, rank: index + 1, score: scores.get(player.playerId) ?? 0 })); }

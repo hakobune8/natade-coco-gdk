@@ -53,15 +53,18 @@ natadeCOCO LauncherとJoin Pageから起動情報を受け取り、認証情報�
 | ファイル | 役割 |
 | --- | --- |
 | `src/display.ts` | ゲーム状態、大画面描画、スコア、結果表示 |
-| `src/controller.ts` | スマートフォン操作とController Profileの表示 |
+| `src/controller.ts` | スマートフォン操作、主催者専用の再試合、二段階の終了操作 |
 | `src/styles.css` | 大画面とスマートフォンのレスポンシブレイアウト |
 | `game.yaml` | 人数、時間、ブラウザ機能、URL、互換性 |
 | `src/contract.test.ts` | ゲーム固有の起動・Controller引き渡しテスト |
-| `src/controller.test.ts` | Controller終了通知と共通`/control`復帰テスト |
+| `src/controller.test.ts` | 主催者権限、再試合・終了、共通`/control`復帰テスト |
 
 スターターは単純なCanvas/CSS表示のため、プラットフォームコードを分解せずに
 ゲーム部分を置き換えられます。SDKの考え方、マニフェスト、スマートフォン対応、
 責任境界は[ゲーム開発ガイド](docs/game-development.md)を参照してください。
+結果画面はゲーム側の責務です。現在の主催者だけに「もう一度遊ぶ」と
+「ゲームを終了」を表示し、プラットフォームがleaseを検証して再試合用の新しい
+run IDを発行します。
 
 ## 検証してリリースを引き渡す
 

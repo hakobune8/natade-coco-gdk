@@ -4,6 +4,18 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-27
+
+- Let the active organizer restart a finished game or end an active or finished
+  game from the game Controller.
+- Preserve the session, room, and player roster across rematches while creating
+  a fresh run ID.
+- Keep finished Controller and Display connections available for rematch and
+  reconnect.
+- Extend the result fail-safe window to one minute.
+- Update the vendored platform SDK set to the organizer-owned game lifecycle
+  contract.
+
 ## [0.5.0] - 2026-07-24
 
 - Allow cooperative games to submit tied rankings such as all players at rank 1.

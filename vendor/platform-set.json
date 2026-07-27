@@ -2,28 +2,28 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/SSLHQ/natade-coco-edge",
-    "revision": "fde546a272d11bb912df794a32bb2ae024913fe6"
+    "revision": "01c86475a4bb5525c33faa491edcf3245e5017c4"
   },
   "packages": {
     "@natadecoco/protocol": {
       "version": "0.1.0",
       "archive": "natadecoco-protocol-0.1.0.tgz",
-      "sha256": "caf497a0df53b15613088355e86f0b9b4c2a62db943873e892b180025633c7a3"
+      "sha256": "9eb07b574b409219bc3a770f7eeb7b51229db4555bd07ce0a5ee7dcfc9c93b35"
     },
     "@natadecoco/controller-sdk": {
       "version": "0.1.0",
       "archive": "natadecoco-controller-sdk-0.1.0.tgz",
-      "sha256": "8d309667fe97a07bc350164fd29f7502ab6b4661cd0e12858ceb7be0601aa0d3"
+      "sha256": "a19e6d7da0280f80ed7663806fbd0c1141704d41e4e367ab40d76e8595672b6e"
     },
     "@natadecoco/display-sdk": {
       "version": "0.1.0",
       "archive": "natadecoco-display-sdk-0.1.0.tgz",
-      "sha256": "b809e8e7527710322caebb7d5e92dccfac1fd90095cf92c13baeae27d0b52548"
+      "sha256": "637caef58ddbb4225cc5f29b8a7eca369a8d6cae5c1a2d81036c279a4c2bfbc4"
     },
     "@natadecoco/game-schema": {
       "version": "0.1.0",
       "archive": "natadecoco-game-schema-0.1.0.tgz",
-      "sha256": "cef1dcf29668bdfa39f44d6a25261a818cf497c8ced3664fe736edd7c0e2aca8"
+      "sha256": "eca178389890c6c52bd5b0ba540d13cd7438ffdf163248f2ff5a14e091c7db99"
     }
   }
 }

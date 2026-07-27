@@ -15,6 +15,17 @@ export interface ControllerHandoff {
   controllerUrl: typeof CONTROLLER_PATH;
 }
 
+export interface PlatformControlState {
+  mode: "catalog" | "lobby" | "playing";
+  role: "organizer" | "participant";
+  hasLease: boolean;
+}
+
+export interface PlatformSessionState {
+  state: "idle" | "waiting" | "ready" | "playing" | "finished" | "terminated" | "error";
+  runId?: string;
+}
+
 export function parseLaunchContext(search: string): LaunchContext | null {
   const params = new URLSearchParams(search);
   const sessionId = params.get("sessionId") ?? "";
@@ -45,9 +56,55 @@ export async function requestDisplayTicket(fetcher: typeof fetch = globalThis.fe
   return { token: value.token, tokenExpiresAt: value.tokenExpiresAt };
 }
 
-export async function completeDisplayRun(fetcher: typeof fetch = globalThis.fetch): Promise<void> {
-  const response = await fetcher("/launcher-api/v1/session/display-complete", { method: "POST", credentials: "same-origin", headers: { Accept: "application/json" } });
-  if (!response.ok) throw new Error(`display completion unavailable: ${response.status}`);
+export async function platformControlHeartbeat(fetcher: typeof fetch = globalThis.fetch): Promise<PlatformControlState> {
+  const response = await fetcher("/launcher-api/v1/control/heartbeat", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { Accept: "application/json" }
+  });
+  if (!response.ok) throw new Error(`platform heartbeat unavailable: ${response.status}`);
+  const value = await response.json() as Partial<PlatformControlState>;
+  if (
+    value.mode !== "catalog" && value.mode !== "lobby" && value.mode !== "playing"
+    || value.role !== "organizer" && value.role !== "participant"
+    || typeof value.hasLease !== "boolean"
+  ) throw new Error("invalid platform heartbeat");
+  return value as PlatformControlState;
+}
+
+export async function platformSession(fetcher: typeof fetch = globalThis.fetch): Promise<PlatformSessionState | null> {
+  const response = await fetcher("/launcher-api/v1/session", { credentials: "same-origin", headers: { Accept: "application/json" } });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`platform session unavailable: ${response.status}`);
+  const value = await response.json() as { session?: Partial<PlatformSessionState> };
+  const state = value.session?.state;
+  if (state !== "idle" && state !== "waiting" && state !== "ready" && state !== "playing" && state !== "finished" && state !== "terminated" && state !== "error") {
+    throw new Error("invalid platform session");
+  }
+  const runId = value.session?.runId;
+  if (runId !== undefined && !validIdentifier(runId)) throw new Error("invalid platform run");
+  return { state, ...(runId === undefined ? {} : { runId }) };
+}
+
+export async function restartPlatformGame(fetcher: typeof fetch = globalThis.fetch): Promise<PlatformSessionState> {
+  const response = await fetcher("/launcher-api/v1/control/restart", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { Accept: "application/json" }
+  });
+  if (!response.ok) throw new Error(`game restart unavailable: ${response.status}`);
+  const value = await response.json() as { session?: Partial<PlatformSessionState> };
+  if (value.session?.state !== "playing" || !validIdentifier(value.session.runId)) throw new Error("invalid restarted session");
+  return { state: "playing", runId: value.session.runId };
+}
+
+export async function endPlatformGame(fetcher: typeof fetch = globalThis.fetch): Promise<void> {
+  const response = await fetcher("/launcher-api/v1/control/end", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { Accept: "application/json" }
+  });
+  if (!response.ok) throw new Error(`game end unavailable: ${response.status}`);
 }
 
 function validIdentifier(value: unknown): value is string { return typeof value === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,127}$/.test(value); }
