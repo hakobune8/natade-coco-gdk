@@ -55,15 +55,18 @@ Join Page; credentials are never placed in URLs.
 | File | Purpose |
 | --- | --- |
 | `src/display.ts` | Game state, large-screen rendering, score, and result flow |
-| `src/controller.ts` | Phone controls and Controller Profile labels |
+| `src/controller.ts` | Phone controls, organizer-only rematch, and two-step end action |
 | `src/styles.css` | Display and responsive phone layout |
 | `game.yaml` | Players, duration, browser features, routes, and compatibility |
 | `src/contract.test.ts` | Game-specific launch and handoff contract tests |
-| `src/controller.test.ts` | Controller completion and stable `/control` return tests |
+| `src/controller.test.ts` | Organizer authority, rematch/end, and stable `/control` return tests |
 
 The starter uses simple Canvas/CSS visuals so you can replace the game without
 untangling platform code. Read [Developing a game](docs/game-development.md) for
 the SDK mental model, manifest rules, mobile-browser guidance, and boundaries.
+The result screen stays game-owned: only the active organizer sees Play again
+and End game, while the platform validates the lease and creates a fresh run
+for a rematch.
 
 ## Validate and release
 

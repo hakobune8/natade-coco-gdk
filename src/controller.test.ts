@@ -1,19 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { createControllerLifecycle, platformControlHeartbeat } from "./controller.js";
+import { createControllerLifecycle } from "./controller.js";
+import { endPlatformGame, platformControlHeartbeat, restartPlatformGame } from "./contract.js";
 
-test("coalesces duplicate terminal notifications into one completion", () => {
+test("keeps a finished controller alive for a rematch and coalesces session termination", () => {
   let completions = 0;
   const lifecycle = createControllerLifecycle(() => { completions += 1; });
   lifecycle.onSessionState("finished");
   lifecycle.onSessionState("finished");
+  assert.equal(completions, 0);
   lifecycle.onSessionState("terminated");
   lifecycle.onError({ retryable: false });
   assert.equal(completions, 1);
 });
 
-test("completes once after a retryable reconnect path reaches finished", () => {
+test("does not complete after a retryable reconnect path reaches finished", () => {
   let completions = 0;
   const lifecycle = createControllerLifecycle(() => { completions += 1; });
   lifecycle.onSessionState("playing");
@@ -21,7 +23,7 @@ test("completes once after a retryable reconnect path reaches finished", () => {
   lifecycle.onSessionState("playing");
   lifecycle.onSessionState("finished");
   lifecycle.onSessionState("finished");
-  assert.equal(completions, 1);
+  assert.equal(completions, 0);
 });
 
 test("completes on a non-retryable SDK error", () => {
@@ -36,12 +38,12 @@ test("completes on a non-retryable SDK error", () => {
 test("keeps the platform control lease alive while the game controller is open", async () => {
   let endpoint = "";
   let init: RequestInit | undefined;
-  const mode = await platformControlHeartbeat(async (path, options) => {
+  const state = await platformControlHeartbeat(async (path, options) => {
     endpoint = String(path);
     init = options;
-    return new Response(JSON.stringify({ mode: "playing" }), { status: 200, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ mode: "playing", role: "organizer", hasLease: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   });
-  assert.equal(mode, "playing");
+  assert.deepEqual(state, { mode: "playing", role: "organizer", hasLease: true });
   assert.equal(endpoint, "/launcher-api/v1/control/heartbeat");
   assert.equal(init?.method, "POST");
   assert.equal(init?.credentials, "same-origin");
@@ -49,4 +51,18 @@ test("keeps the platform control lease alive while the game controller is open",
 
 test("rejects an invalid platform heartbeat response", async () => {
   await assert.rejects(platformControlHeartbeat(async () => new Response(JSON.stringify({ mode: "unknown" }), { status: 200 })), /invalid platform heartbeat/u);
+});
+
+test("uses organizer-authorized platform lifecycle endpoints", async () => {
+  const calls: string[] = [];
+  const fetcher = async (input: string | URL | Request): Promise<Response> => {
+    calls.push(String(input));
+    if (String(input).endsWith("/restart")) {
+      return new Response(JSON.stringify({ session: { state: "playing", runId: "run-2" } }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    return new Response(null, { status: 204 });
+  };
+  assert.deepEqual(await restartPlatformGame(fetcher), { state: "playing", runId: "run-2" });
+  await endPlatformGame(fetcher);
+  assert.deepEqual(calls, ["/launcher-api/v1/control/restart", "/launcher-api/v1/control/end"]);
 });

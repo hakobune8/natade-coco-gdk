@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CONTROLLER_HANDOFF_KEY, CONTROLLER_PATH, GAME_ID, completeDisplayRun, consumeControllerHandoff, parseLaunchContext } from "./contract.js";
+import { CONTROLLER_HANDOFF_KEY, CONTROLLER_PATH, GAME_ID, consumeControllerHandoff, parseLaunchContext, platformSession } from "./contract.js";
 
 test("accepts only the game-bound display launch context", () => {
   assert.deepEqual(parseLaunchContext(`?sessionId=session_01&gameId=${GAME_ID}`), { sessionId: "session_01", gameId: GAME_ID });
@@ -15,13 +15,13 @@ test("consumes one exact same-origin Controller handoff", () => {
   assert.equal(stored, null);
 });
 
-test("lets only the physical display complete the platform run", async () => {
+test("reads the platform run without exposing operator credentials", async () => {
   let endpoint = "";
-  await completeDisplayRun(async (input, init) => {
+  const state = await platformSession(async (input, init) => {
     endpoint = String(input);
-    assert.equal(init?.method, "POST");
     assert.equal(init?.credentials, "same-origin");
-    return new Response(null, { status: 204 });
+    return new Response(JSON.stringify({ session: { state: "finished", runId: "run-1" } }), { status: 200, headers: { "Content-Type": "application/json" } });
   });
-  assert.equal(endpoint, "/launcher-api/v1/session/display-complete");
+  assert.deepEqual(state, { state: "finished", runId: "run-1" });
+  assert.equal(endpoint, "/launcher-api/v1/session");
 });
