@@ -85,7 +85,7 @@ Provide the operator with the SemVer version, reviewed Git SHA, immutable image
 digest, SBOMs, vulnerability result, and a contact sheet for visible UI changes.
 Publishing an image does not deploy it. Fleet targeting, Registry values,
 RuntimeClass selection, and rollout approval remain operator actions. A
-game-owned Controller receives a one-time Launcher handoff and returns to the
+game-owned Controller receives a short-lived, same-tab Launcher handoff and returns to the
 shared `/control` entry when the run ends. See
 [Developing a game](docs/game-development.md) and
 [Release handoff](docs/release-handoff.md).

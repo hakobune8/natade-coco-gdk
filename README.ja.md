@@ -82,7 +82,7 @@ make container-build
 SemVer、レビュー済みGit SHA、変更不能なimage digest、SBOM、脆弱性検査結果、
 UI変更時のコンタクトシートを運用者へ渡します。イメージを公開しただけでは配布
 されません。Fleet対象、Registry値、RuntimeClass、ロールアウト承認は運用者が
-担当します。ゲーム固有ControllerはLauncherから一回限りのhandoffを受け取り、
+担当します。ゲーム固有ControllerはLauncherから短命かつsame-tab限定のhandoffを受け取り、
 終了時は共通の`/control`へ戻ります。詳細は[ゲーム開発ガイド](docs/game-development.md)と
 [リリース引き渡し](docs/release-handoff.md)を参照してください。
 
