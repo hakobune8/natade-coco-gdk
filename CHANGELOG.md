@@ -4,6 +4,8 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-07-28
+
 - Retain the validated, short-lived Controller handoff in same-tab session
   storage so reload restores the same player.
 - Persist refreshed player tokens back to that handoff and clear it on explicit
