@@ -2,9 +2,11 @@ import { createControllerClient, mountControllerProfileUI, type ControllerClient
 import type { SessionState } from "@natadecoco/protocol";
 import {
   DISPLAY_NAME,
+  clearControllerHandoff,
   endPlatformGame,
   platformControlHeartbeat,
   platformSession,
+  persistRefreshedControllerToken,
   restartPlatformGame,
   type ControllerHandoff,
   type PlatformControlState,
@@ -14,12 +16,20 @@ import {
 const PLATFORM_HEARTBEAT_MS = 2_000;
 
 export async function runController(root: HTMLElement, handoff: ControllerHandoff): Promise<void> {
-  const client = createControllerClient({ sessionId: handoff.sessionId, playerId: handoff.playerId, token: handoff.token, tokenExpiresAt: handoff.tokenExpiresAt, profile: "directional-pad" });
+  const client = createControllerClient({
+    sessionId: handoff.sessionId,
+    playerId: handoff.playerId,
+    token: handoff.token,
+    tokenExpiresAt: handoff.tokenExpiresAt,
+    profile: "directional-pad",
+    onTokenRefreshed: (token, tokenExpiresAt) => persistRefreshedControllerToken(sessionStorage, handoff, token, tokenExpiresAt)
+  });
   let returning = false;
   let busy = false;
   const returnToPlatform = (): void => {
     if (returning) return;
     returning = true;
+    clearControllerHandoff();
     window.location.replace("/control");
   };
   const controller = mountController(root, handoff.slot, handoff.displayName, client, {

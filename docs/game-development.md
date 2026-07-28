@@ -108,7 +108,7 @@ and synchronization semantics.
 ## Testing strategy
 
 Unit-test game rules separately from SDK transport. Contract tests cover launch
-context and one-time Controller handoff. Add browser tests for behavior that
+context and bounded same-tab Controller handoff. Add browser tests for behavior that
 depends on layout, touch, reload, or reconnect. UI changes require a contact
 sheet; latency, device, and offline claims require evidence from the relevant
 environment.

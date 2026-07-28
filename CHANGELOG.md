@@ -4,6 +4,12 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Retain the validated, short-lived Controller handoff in same-tab session
+  storage so reload restores the same player.
+- Persist refreshed player tokens back to that handoff and clear it on explicit
+  platform return, expiry, or validation failure.
+- Update the vendored platform SDK set for reload-safe Controller recovery.
+
 ## [0.6.0] - 2026-07-27
 
 - Let the active organizer restart a finished game or end an active or finished

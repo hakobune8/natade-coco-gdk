@@ -196,7 +196,7 @@ packages:
     os: [win32]
 
   '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-+nOF2aEuO02UBCItm2pYUzVQu/T8jdljRU0Kmg2rq4kQCMptf3qMyb4U+ZOaQoNXdUVOzFwPtfe9uUEJ1VEXWA==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-snhN6HVLA/8lsIjGObbnzXBASRE3nrcrBA2wx69kYJCIgCI99m0mBPuc0SvNxJWVcTHlOxvNJ4nhymMxbeTjdw==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.1.0.tgz':
@@ -204,12 +204,12 @@ packages:
     version: 0.1.0
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
-    resolution: {integrity: sha512-GJ74xIf9zTpr+RQUx8ObNJ74fXCdqu4FH5HHooRcPSkCB4bXYnOb+8KngcfwDAHn6jIhEckj/n041KhHVpOO2Q==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
+    resolution: {integrity: sha512-nMvvEY6p/fb6udthNnq/XL/RfB0CwRH7kEA/l42Ng1nhV3z4+pxe0iVw6L/cESMnq7Mi2pUmdGaTZR45kWIj0Q==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
     version: 0.1.0
     hasBin: true
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz':
-    resolution: {integrity: sha512-IbwMJbqHycXmBR7pbJHyNfU/73eEHyBmx1B1zks4BWLSSEhqS7yJVWLJ7wQDr43u1LOSTdcJrAvCE/o0XRoRsw==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
+    resolution: {integrity: sha512-jIYDUSd8w2942gZNZWE+KbRlP8QCZyd8+UF8USwe3JD2+Z+Nn4bRV5SY/l4hJppoeGmknKvXDuLVi/lV12ZKBg==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
     version: 0.1.0
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
