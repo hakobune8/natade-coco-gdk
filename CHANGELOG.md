@@ -4,6 +4,14 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-07-31
+
+- Stop a superseded Controller connection from reconnecting so the newest
+  browser tab retains the player connection.
+- Preserve reconnect recovery for stale input epochs and other transient
+  transport failures.
+- Update the vendored Platform set to the merged Edge Controller SDK revision.
+
 ## [0.6.2] - 2026-07-31
 
 - Update the vendored Platform set for game-scoped `session.joinPolicy`.

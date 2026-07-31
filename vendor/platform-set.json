@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/SSLHQ/natade-coco-edge",
-    "revision": "19ee951f4894ca8357b82da851f4e88c355dd7c2"
+    "revision": "5cf0e113b776a6af373013760fe62d846506df1a"
   },
   "packages": {
     "@natadecoco/protocol": {
@@ -13,7 +13,7 @@
     "@natadecoco/controller-sdk": {
       "version": "0.1.0",
       "archive": "natadecoco-controller-sdk-0.1.0.tgz",
-      "sha256": "325142d207c337efdb95e2657e5b83f9e526d5c430de299445d4cd2a76a187ef"
+      "sha256": "26bed4067529853ff8cc9eb25499e770288494d7c94d32a98cc0b7d181868298"
     },
     "@natadecoco/display-sdk": {
       "version": "0.1.0",
