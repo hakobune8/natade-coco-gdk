@@ -22,6 +22,9 @@ Keep `game.yaml` accurate as behavior changes:
 - `browserFeatures.optional`: features that degrade safely;
 - session duration and result time: values owned by the game and covered by
   tests;
+- omit `session.joinPolicy` to accept new players only before start; games that
+  safely initialize a new player during an active run may opt in with
+  `joinPolicy: while-playing`;
 - `runtimeCompatibility`: the supported Runtime major range.
 
 ### Artwork contract

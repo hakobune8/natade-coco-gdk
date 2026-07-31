@@ -4,6 +4,11 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-07-31
+
+- Update the vendored Platform set for game-scoped `session.joinPolicy`.
+- Document that active-run joins remain opt-in and default to pre-start only.
+
 ## [0.6.1] - 2026-07-28
 
 - Retain the validated, short-lived Controller handoff in same-tab session
