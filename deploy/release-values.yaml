@@ -9,8 +9,8 @@ gameManifest:
   metadata:
     name: gdk-reference
   spec:
-    version: 0.6.2
+    version: 0.6.3
     image:
       repository: registry.example.invalid/natadecoco/gdk-reference
-      tag: 0.6.2
+      tag: 0.6.3
       digest: sha256:0000000000000000000000000000000000000000000000000000000000000000

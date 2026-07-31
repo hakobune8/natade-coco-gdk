@@ -196,7 +196,7 @@ packages:
     os: [win32]
 
   '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-snhN6HVLA/8lsIjGObbnzXBASRE3nrcrBA2wx69kYJCIgCI99m0mBPuc0SvNxJWVcTHlOxvNJ4nhymMxbeTjdw==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-EMhUTbOkSTdJ2x/qGpDT5bi9CCSkPvphJrYvf8sXVdLmVk4M4GI6BlU6F78Om0zOLQ8VpasifsdDMc/yNj+KUw==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.1.0.tgz':
