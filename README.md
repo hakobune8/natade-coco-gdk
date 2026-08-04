@@ -102,6 +102,9 @@ git diff -- vendor package.json pnpm-lock.yaml
 
 The command validates an offline candidate before changing the game and records
 the exact source Git SHA and archive checksums in `vendor/platform-set.json`.
+The release handoff also generates a machine-readable attestation that binds the
+published image digest to this exact GDK and platform set; see
+[`docs/release-handoff.md`](docs/release-handoff.md).
 Review the complete change in one pull request.
 
 ## Scope and help

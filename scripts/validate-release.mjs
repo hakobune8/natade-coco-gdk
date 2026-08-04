@@ -13,6 +13,8 @@ const requiredFiles = [
   "docs/release-policy.md",
   "docs/release-handoff.md",
   "docs/troubleshooting.md",
+  "scripts/release-attestation.mjs",
+  "scripts/release-attestation.test.mjs",
   ".github/ISSUE_TEMPLATE/bug_report.yml",
   ".github/ISSUE_TEMPLATE/feature_request.yml",
   ".github/ISSUE_TEMPLATE/config.yml",
@@ -23,6 +25,7 @@ const files = Object.fromEntries(requiredFiles.map((path) => [path, readFileSync
 const packageJSON = JSON.parse(readFileSync("package.json", "utf8"));
 const marker = JSON.parse(readFileSync(".natadecoco-template.json", "utf8"));
 const platformSet = JSON.parse(readFileSync("vendor/platform-set.json", "utf8"));
+const gdkRelease = JSON.parse(readFileSync("vendor/gdk-release.json", "utf8"));
 const game = readFileSync("game.yaml", "utf8");
 const chart = readFileSync("deploy/chart/Chart.yaml", "utf8");
 const chartValues = readFileSync("deploy/chart/values.yaml", "utf8");
@@ -43,10 +46,14 @@ assert(workflow.includes(`            VERSION=${version}\n`), "CI container vers
 assert(marker.schemaVersion === 1 && marker.identity?.gameId && marker.identity?.repository?.startsWith("https://github.com/"), "template identity is invalid");
 assert(platformSet.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(platformSet.source?.revision), "platform set source revision is invalid");
 assert(Object.keys(platformSet.packages ?? {}).length === 4, "platform set must contain four packages");
+assert(gdkRelease.schemaVersion === 1 && gdkRelease.repository === "https://github.com/hakobune8/natade-coco-gdk", "GDK release repository is invalid");
+assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(gdkRelease.version), "GDK release version is invalid");
+assert(gdkRelease.releaseTag === `v${gdkRelease.version}`, "GDK release tag does not match its version");
 assert(files["README.md"].includes("README.ja.md") && files["README.ja.md"].includes("README.md"), "README language links are missing");
 assert(files["README.md"].includes("Use this template") && files["docs/getting-started.md"].includes("make init-game"), "external developer quick start is incomplete");
 assert(files["SECURITY.md"].includes("Report a vulnerability"), "private vulnerability reporting instructions are missing");
 assert(files["docs/release-handoff.md"].includes("Developer deliverables") && files["docs/release-handoff.md"].includes("Operator handoff"), "release responsibility boundary is incomplete");
+assert(files["docs/release-handoff.md"].includes("release-attestation"), "release attestation handoff is undocumented");
 assert(!/^\s*-?\s*uses:\s*[^\s]+@(?![a-f0-9]{40}(?:\s|$))/m.test(workflow), "GitHub Actions must use full commit SHAs");
 assert(!files["CHANGELOG.md"].includes("TBD"), "changelog contains an unresolved placeholder");
 

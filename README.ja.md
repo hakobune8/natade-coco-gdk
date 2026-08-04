@@ -97,8 +97,10 @@ git diff -- vendor package.json pnpm-lock.yaml
 ```
 
 一時ディレクトリでオフライン検証に成功した場合だけゲーム側を変更し、更新元の
-Git SHAとtarballのSHA-256を`vendor/platform-set.json`へ記録します。4パッケージ
-すべてを1つのPull Requestとしてレビューしてください。
+Git SHAとtarballのSHA-256を`vendor/platform-set.json`へ記録します。リリース時には、
+公開イメージのdigestをこのGDKとplatform setへ結び付ける
+機械可読な証明も生成します。手順は[`docs/release-handoff.md`](docs/release-handoff.md)を参照してください。
+4パッケージすべてを1つのPull Requestとしてレビューしてください。
 
 ## 対象範囲と問い合わせ
 
