@@ -84,7 +84,10 @@ UI変更時のコンタクトシートを運用者へ渡します。イメージ
 されません。Fleet対象、Registry値、RuntimeClass、ロールアウト承認は運用者が
 担当します。ゲーム固有ControllerはLauncherから短命かつsame-tab限定のhandoffを受け取り、
 終了時は共通の`/control`へ戻ります。詳細は[ゲーム開発ガイド](docs/game-development.md)と
-[リリース引き渡し](docs/release-handoff.md)を参照してください。
+[リリース引き渡し](docs/release-handoff.md)を参照してください。ソース、workflow、
+依存関係、リリースの要件は
+[サプライチェーン・セキュリティ契約](docs/supply-chain-security-contract.md)で定義し、
+既存ゲームは[移行手順](docs/supply-chain-security-migration.md)を使用します。
 
 ## プラットフォーム契約を更新する
 

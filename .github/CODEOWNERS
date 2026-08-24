@@ -1,0 +1,7 @@
+.github/ @kazyamaz200
+config/supply-chain-security-contract.json @kazyamaz200
+pnpm-lock.yaml @kazyamaz200
+scripts/supply-chain-security.mjs @kazyamaz200
+scripts/validate-release.mjs @kazyamaz200
+docs/release-policy.md @kazyamaz200
+docs/release-handoff.md @kazyamaz200

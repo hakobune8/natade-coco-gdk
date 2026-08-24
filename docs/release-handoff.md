@@ -11,11 +11,14 @@ Provide all of the following together:
 2. reviewed full Git SHA and a matching `v<version>` source tag;
 3. OCI image reference using the SemVer tag and registry-reported digest;
 4. SPDX and CycloneDX SBOMs;
-5. fixed HIGH/CRITICAL vulnerability scan result;
-6. `make validate test lint build release-check` result;
-7. Runtime compatibility and browser/device test notes;
-8. a contact sheet and behavior notes for visible UI changes;
-9. `dist/natadecoco-release-attestation.json`, generated after the immutable
+5. source-security, moderate dependency audit, and CodeQL results for the same
+   revision;
+6. fixed HIGH/CRITICAL image vulnerability scan result;
+7. default-branch Ruleset readback and the reviewed exception list;
+8. `make security-check validate test lint build release-check` result;
+9. Runtime compatibility and browser/device test notes;
+10. a contact sheet and behavior notes for visible UI changes;
+11. `dist/natadecoco-release-attestation.json`, generated after the immutable
    image digest is known:
 
    ```bash
@@ -25,8 +28,9 @@ Provide all of the following together:
    ```
 
 The attestation binds the game ID/version/source revision and OCI digest to the
-exact GDK release and the SHA-256 of `vendor/platform-set.json`. Do not edit it
-by hand. Verify a received file with
+exact GDK release, the version and SHA-256 of the supply-chain security
+contract, and the SHA-256 of `vendor/platform-set.json`. Do not edit it by hand.
+Verify a received file with
 `make release-attestation-check ATTESTATION=/path/to/attestation.json`.
 For a tagged release, the `Game CI` workflow can be dispatched with the
 registry repository and digest; it verifies the matching `v<version>` tag and

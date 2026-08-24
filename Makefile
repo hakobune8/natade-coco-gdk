@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 PNPM ?= pnpm
 
-.PHONY: help init-game update-platform setup lint test validate release-check release-attestation release-attestation-check build dev container-build clean
+.PHONY: help init-game update-platform setup lint test validate security-check release-check release-attestation release-attestation-check build dev container-build clean
 
 help: ## Show targets
 	@awk 'BEGIN {FS = ":.*## "; printf "Usage: make <target>\n\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -31,7 +31,11 @@ test: ## Run game and server tests
 
 validate: ## Validate Game Schema and package boundaries
 	@$(PNPM) validate
+	@$(MAKE) security-check
 	@$(MAKE) release-check
+
+security-check: ## Enforce the versioned GDK source-security contract
+	@node scripts/supply-chain-security.mjs all
 
 release-check: ## Validate release metadata, public documentation, and CI policy
 	@node scripts/validate-release.mjs

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "1.0.0",
+  "unicode": {
+    "ignoredPaths": [
+      {
+        "path": "vendor/natadecoco-controller-sdk-0.1.0.tgz",
+        "reason": "Checksum-bound binary package; source is scanned in its owning repository",
+        "owner": "GDK Maintainers"
+      },
+      {
+        "path": "vendor/natadecoco-display-sdk-0.1.0.tgz",
+        "reason": "Checksum-bound binary package; source is scanned in its owning repository",
+        "owner": "GDK Maintainers"
+      },
+      {
+        "path": "vendor/natadecoco-game-schema-0.1.0.tgz",
+        "reason": "Checksum-bound binary package; source is scanned in its owning repository",
+        "owner": "GDK Maintainers"
+      },
+      {
+        "path": "vendor/natadecoco-protocol-0.1.0.tgz",
+        "reason": "Checksum-bound binary package; source is scanned in its owning repository",
+        "owner": "GDK Maintainers"
+      }
+    ],
+    "allowlist": []
+  },
+  "workflows": {
+    "githubHostedRunnerAllowlist": ["ubuntu-24.04"],
+    "selfHostedRunnerLabelAllowlist": [],
+    "allowedWritePermissions": {
+      ".github/workflows/ci.yml:codeql": {
+        "scopes": ["security-events"],
+        "reason": "Upload CodeQL results for the exact analyzed revision",
+        "owner": "GDK Maintainers"
+      }
+    }
+  },
+  "dependencies": {
+    "lockfiles": ["pnpm-lock.yaml"],
+    "maximumChangedLinesPerLockfile": 2000,
+    "lifecycleScriptAllowlist": []
+  }
+}

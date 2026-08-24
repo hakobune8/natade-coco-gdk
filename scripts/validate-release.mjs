@@ -12,13 +12,20 @@ const requiredFiles = [
   "docs/game-development.md",
   "docs/release-policy.md",
   "docs/release-handoff.md",
+  "docs/supply-chain-security-contract.md",
+  "docs/supply-chain-security-migration.md",
   "docs/troubleshooting.md",
+  "config/supply-chain-security-contract.json",
+  "scripts/supply-chain-security.mjs",
+  "scripts/supply-chain-security.test.mjs",
   "scripts/release-attestation.mjs",
   "scripts/release-attestation.test.mjs",
   ".github/ISSUE_TEMPLATE/bug_report.yml",
   ".github/ISSUE_TEMPLATE/feature_request.yml",
   ".github/ISSUE_TEMPLATE/config.yml",
-  ".github/PULL_REQUEST_TEMPLATE.md"
+  ".github/PULL_REQUEST_TEMPLATE.md",
+  ".github/CODEOWNERS",
+  ".github/dependabot.yml"
 ];
 
 const files = Object.fromEntries(requiredFiles.map((path) => [path, readFileSync(path, "utf8")]));
@@ -26,6 +33,7 @@ const packageJSON = JSON.parse(readFileSync("package.json", "utf8"));
 const marker = JSON.parse(readFileSync(".natadecoco-template.json", "utf8"));
 const platformSet = JSON.parse(readFileSync("vendor/platform-set.json", "utf8"));
 const gdkRelease = JSON.parse(readFileSync("vendor/gdk-release.json", "utf8"));
+const securityContract = JSON.parse(readFileSync("config/supply-chain-security-contract.json", "utf8"));
 const game = readFileSync("game.yaml", "utf8");
 const chart = readFileSync("deploy/chart/Chart.yaml", "utf8");
 const chartValues = readFileSync("deploy/chart/values.yaml", "utf8");
@@ -49,11 +57,14 @@ assert(Object.keys(platformSet.packages ?? {}).length === 4, "platform set must 
 assert(gdkRelease.schemaVersion === 1 && gdkRelease.repository === "https://github.com/hakobune8/natade-coco-gdk", "GDK release repository is invalid");
 assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(gdkRelease.version), "GDK release version is invalid");
 assert(gdkRelease.releaseTag === `v${gdkRelease.version}`, "GDK release tag does not match its version");
+assert(securityContract.schemaVersion === 1 && /^\d+\.\d+\.\d+$/.test(securityContract.contractVersion), "supply-chain security contract is invalid");
 assert(files["README.md"].includes("README.ja.md") && files["README.ja.md"].includes("README.md"), "README language links are missing");
 assert(files["README.md"].includes("Use this template") && files["docs/getting-started.md"].includes("make init-game"), "external developer quick start is incomplete");
 assert(files["SECURITY.md"].includes("Report a vulnerability"), "private vulnerability reporting instructions are missing");
 assert(files["docs/release-handoff.md"].includes("Developer deliverables") && files["docs/release-handoff.md"].includes("Operator handoff"), "release responsibility boundary is incomplete");
 assert(files["docs/release-handoff.md"].includes("release-attestation"), "release attestation handoff is undocumented");
+assert(files["docs/supply-chain-security-contract.md"].includes(`Contract version: \`${securityContract.contractVersion}\``), "security contract version is not documented");
+assert(makefile.includes("security-check") && workflow.includes("source-security:"), "source-security gate is not wired into local and CI validation");
 assert(!/^\s*-?\s*uses:\s*[^\s]+@(?![a-f0-9]{40}(?:\s|$))/m.test(workflow), "GitHub Actions must use full commit SHAs");
 assert(!files["CHANGELOG.md"].includes("TBD"), "changelog contains an unresolved placeholder");
 

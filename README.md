@@ -88,7 +88,11 @@ RuntimeClass selection, and rollout approval remain operator actions. A
 game-owned Controller receives a short-lived, same-tab Launcher handoff and returns to the
 shared `/control` entry when the run ends. See
 [Developing a game](docs/game-development.md) and
-[Release handoff](docs/release-handoff.md).
+[Release handoff](docs/release-handoff.md). Source, workflow, dependency, and
+release requirements are defined by the
+[supply-chain security contract](docs/supply-chain-security-contract.md); use
+the [migration guide](docs/supply-chain-security-migration.md) for an existing
+game.
 
 ## Update the platform contract
 

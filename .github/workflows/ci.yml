@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    - cron: "23 3 * * 1"
   workflow_dispatch:
     inputs:
       image_repository:
@@ -19,7 +21,30 @@ permissions:
   contents: read
 
 jobs:
+  source-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with: { version: 10.14.0 }
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: pnpm
+      - name: Install exact dependencies without lifecycle scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Enforce source-security contract
+        env:
+          SUPPLY_CHAIN_BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+        run: make security-check
+      - name: Reject moderate or higher dependency vulnerabilities
+        run: pnpm audit --audit-level moderate
+
   validate:
+    needs: source-security
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -39,6 +64,7 @@ jobs:
       - run: make build
 
   supply-chain:
+    needs: source-security
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -75,9 +101,23 @@ jobs:
           path: supply-chain/
           retention-days: 30
 
+  codeql:
+    needs: source-security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: github/codeql-action/init@42947a340483f03ba47bb1a039b2c519aab3df85 # v3
+        with:
+          languages: javascript-typescript,go
+      - uses: github/codeql-action/analyze@42947a340483f03ba47bb1a039b2c519aab3df85 # v3
+
   release-attestation:
     if: ${{ github.event_name == 'workflow_dispatch' }}
-    needs: [validate, supply-chain]
+    needs: [validate, supply-chain, codeql]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

@@ -18,5 +18,6 @@ effects. Write `None` where appropriate.
 
 ## Security
 
+- [ ] `make security-check` passes and no security exception is implicit or expired.
 - [ ] No credential, token, reconnect handle, player data, private hostname, or
       IP address appears in code, logs, fixtures, screenshots, or documentation.

@@ -14,6 +14,8 @@ export function createAttestation(options, root = process.cwd()) {
   const packageJSON = json(root, "package.json");
   const marker = json(root, ".natadecoco-template.json");
   const gdkRelease = json(root, "vendor/gdk-release.json");
+  const securityBytes = readFileSync(resolve(root, "config/supply-chain-security-contract.json"));
+  const securityContract = JSON.parse(securityBytes.toString("utf8"));
   const platformBytes = readFileSync(resolve(root, "vendor/platform-set.json"));
   const platformSet = JSON.parse(platformBytes.toString("utf8"));
   const sourceRevision = options.sourceRevision ?? gitRevision(root);
@@ -22,6 +24,8 @@ export function createAttestation(options, root = process.cwd()) {
   assert(marker.identity.repository?.startsWith("https://github.com/"), "game source repository is invalid");
   assert(semver.test(packageJSON.version), "game version must be SemVer without v");
   validateGDKRelease(gdkRelease);
+  assert(securityContract.schemaVersion === 1, "security contract schema is invalid");
+  assert(semver.test(securityContract.contractVersion), "security contract version is invalid");
   assert(platformSet.schemaVersion === 1, "platform set schema is invalid");
   assert(platformSet.source?.repository?.startsWith("https://"), "platform source repository is invalid");
   assert(revision.test(platformSet.source?.revision), "platform source revision is invalid");
@@ -48,6 +52,10 @@ export function createAttestation(options, root = process.cwd()) {
       repository: gdkRelease.repository,
       version: gdkRelease.version,
       releaseTag: gdkRelease.releaseTag,
+      securityContract: {
+        version: securityContract.contractVersion,
+        sha256: createHash("sha256").update(securityBytes).digest("hex")
+      },
       platformSet: {
         repository: platformSet.source.repository,
         revision: platformSet.source.revision,
@@ -62,7 +70,8 @@ export function verifyAttestation(attestation, root = process.cwd()) {
   exactKeys(attestation.game, ["id", "version", "source"], "game");
   exactKeys(attestation.game.source, ["repository", "revision", "tag"], "game source");
   exactKeys(attestation.image, ["repository", "digest"], "image");
-  exactKeys(attestation.gdk, ["repository", "version", "releaseTag", "platformSet"], "GDK");
+  exactKeys(attestation.gdk, ["repository", "version", "releaseTag", "securityContract", "platformSet"], "GDK");
+  exactKeys(attestation.gdk.securityContract, ["version", "sha256"], "security contract");
   exactKeys(attestation.gdk.platformSet, ["repository", "revision", "sha256"], "platform set");
 
   const expected = createAttestation({

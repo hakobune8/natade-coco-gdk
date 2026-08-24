@@ -26,10 +26,11 @@ updates are invalid.
 Before tagging a game release:
 
 1. update `package.json`, `game.yaml`, Chart metadata, image tag, and changelog;
-2. run `make setup validate test lint build release-check`;
-3. run `make container-build` and retain SBOM and vulnerability results;
-4. confirm UI changes have a reviewed contact sheet;
-5. hand the exact Git SHA, SemVer, image digest, and evidence to the operator.
+2. declare the supported supply-chain security contract version;
+3. run `make setup security-check validate test lint build release-check`;
+4. run `make container-build` and retain SBOM and vulnerability results;
+5. confirm UI changes have a reviewed contact sheet;
+6. hand the exact Git SHA, SemVer, image digest, security result, and evidence to the operator.
 
 The platform operator, not the game repository, approves Fleet targeting and
 rollout. Rollback selects a previously reviewed immutable digest.
