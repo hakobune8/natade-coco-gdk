@@ -4,6 +4,13 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-08-24
+
+- Update the reference toolchain to TypeScript 7.0.2, Vite 8.2.2, tsx 4.23.12,
+  Node.js types 26.2.0, and yaml 2.9.0.
+- Refresh pinned GitHub Actions for checkout, pnpm, Buildx, Trivy, and CodeQL.
+- Keep CodeQL initialization and analysis on the same v4.37.8 revision.
+
 ## [0.7.0] - 2026-08-24
 
 - Define supply-chain security contract 1.0.0 with machine-verifiable Unicode,
