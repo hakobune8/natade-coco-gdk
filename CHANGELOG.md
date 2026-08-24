@@ -4,6 +4,8 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-24
+
 - Define supply-chain security contract 1.0.0 with machine-verifiable Unicode,
   workflow, runner, permission, lifecycle-script, and lockfile controls.
 - Gate validation, CodeQL, dependency audit, image/SBOM checks, and release
@@ -13,6 +15,9 @@ All notable changes to this game repository are recorded here. Releases use SemV
   game repositories.
 - Update Vite and vulnerable transitive packages until the moderate dependency
   audit is clean.
+- Update the compatible platform set so a newly joined player safely replaces
+  a disconnected slot owner after reconnect grace expiry while connected-owner
+  conflicts remain fatal.
 
 ## [0.6.3] - 2026-07-31
 

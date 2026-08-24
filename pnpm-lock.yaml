@@ -358,20 +358,20 @@ packages:
     os: [win32]
 
   '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-EMhUTbOkSTdJ2x/qGpDT5bi9CCSkPvphJrYvf8sXVdLmVk4M4GI6BlU6F78Om0zOLQ8VpasifsdDMc/yNj+KUw==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-AxxIHMhWgKDfvY+tYt8Ih+RF07hA98YqRWYoh9pd4BRiOWo7/DCtbJCAlOpIwn+jiEgEaLTeg8+bjG0Q9Duudg==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-Vdgs6qmaQN3IhB+6b3aegFoHhrNt/jFL1HOPEkaQdw8wA0pTQNQWznZv+tuHQLre0qAKgXaSgPMKOgu2G0HV7g==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-zQP15Qq3DWv11mlxvxaV6QRjs6t8DjegBXc90h6qHTUc66YlctwMJ8O3uMcpfGg7pR7ItcVfSiHXuJeOj2L+Zw==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
-    resolution: {integrity: sha512-D/C4n8o3PwW+2Uc08bB3gh7itLpMZ+9kgF+M/E3SsD0W3me+sagFgDqOt2i82sZHuxN7Yo+xcSyBLRgUytkfEw==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
+    resolution: {integrity: sha512-jcDNY+vkYv2eLR2D+kJlthfzFtM9pDd0IoPEYLB34RzmFGXo0gel5bG17oLc6C00djiQtkpDqPSXmvQzzaXeNg==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
     version: 0.1.0
     hasBin: true
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz':
-    resolution: {integrity: sha512-YlTOCHUFuO0heQKStm99zI8Eeofc9D66S8SevLUCveQtDw/U/qYjT/7i7RzE3lBsBUO0rVy4DK+uheuHwmr0zA==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
+    resolution: {integrity: sha512-qUTfLdJiG2q2HB160Ul7cZChnKvQdIeMgwZ2+mmDAOgyHSrQUTB0b9COrZl58YLxMeE0FGcx/5laE08yv+mO4Q==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
     version: 0.1.0
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
@@ -505,8 +505,8 @@ packages:
   '@types/node@24.0.15':
     resolution: {integrity: sha512-oaeTSbCef7U/z7rDeJA138xpG3NuKc64/rZ2qmUFkFJmnMsAPaluIifqyWd8hSSMxyP9oie3dLAqYPblag9KgA==}
 
-  ajv@8.18.0:
-    resolution: {integrity: sha512-PlXPeEWMXMZ7sPYOHqmDyCJzcfNrUr3fGNKtezX14ykXOEIvyK81d+qydx89KY5O71FKMPaQ2vBfBFI5NHR63A==}
+  ajv@8.20.0:
+    resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
 
   esbuild@0.25.12:
     resolution: {integrity: sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==}
@@ -635,6 +635,11 @@ packages:
 
   yaml@2.8.3:
     resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
+  yaml@2.9.0:
+    resolution: {integrity: sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -806,8 +811,8 @@ snapshots:
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
     dependencies:
-      ajv: 8.18.0
-      yaml: 2.8.3
+      ajv: 8.20.0
+      yaml: 2.9.0
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz': {}
 
@@ -892,7 +897,7 @@ snapshots:
     dependencies:
       undici-types: 7.8.0
 
-  ajv@8.18.0:
+  ajv@8.20.0:
     dependencies:
       fast-deep-equal: 3.1.3
       fast-uri: 3.1.5
@@ -1054,3 +1059,5 @@ snapshots:
       yaml: 2.8.3
 
   yaml@2.8.3: {}
+
+  yaml@2.9.0: {}
