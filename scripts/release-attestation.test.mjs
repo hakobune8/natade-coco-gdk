@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createAttestation, verifyAttestation } from "./release-attestation.mjs";
 
@@ -19,7 +21,8 @@ test("generates an Edge-consumable release attestation", () => {
   assert.equal(attestation.gdk.version, "0.6.3");
   assert.equal(attestation.gdk.securityContract.version, "1.0.0");
   assert.match(attestation.gdk.securityContract.sha256, /^[0-9a-f]{64}$/);
-  assert.equal(attestation.gdk.platformSet.sha256, "1818c6f7b2629e87c3cc6d544912b96810e355d912511c9f3afa318e7ac5aa95");
+  assert.equal(attestation.gdk.platformSet.sha256,
+    createHash("sha256").update(readFileSync("vendor/platform-set.json")).digest("hex"));
   assert.deepEqual(verifyAttestation(attestation), attestation);
 });
 
