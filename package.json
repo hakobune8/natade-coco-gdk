@@ -21,11 +21,11 @@
     "@natadecoco/protocol": "file:vendor/natadecoco-protocol-0.1.0.tgz"
   },
   "devDependencies": {
-    "@types/node": "24.0.15",
-    "tsx": "4.20.3",
-    "typescript": "5.8.3",
-    "vite": "7.3.6",
-    "yaml": "2.8.3"
+    "@types/node": "26.2.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "yaml": "2.9.0"
   },
   "pnpm": {
     "overrides": {
