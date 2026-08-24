@@ -52,6 +52,8 @@ try {
     }
 
     await cp(packed, join(candidate, "vendor"), { recursive: true });
+    await cp(join(repositoryRoot, "vendor", "gdk-release.json"),
+      join(candidate, "vendor", "gdk-release.json"));
     const packagePath = join(candidate, "package.json");
     const packageJSON = JSON.parse(await readFile(packagePath, "utf8"));
     for (const [name, record] of Object.entries(records)) packageJSON.dependencies[name] = `file:vendor/${record.archive}`;

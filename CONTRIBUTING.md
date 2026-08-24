@@ -19,6 +19,7 @@ Thank you for improving this natadeCOCO game repository.
 
    ```bash
    make setup
+   make security-check
    make validate
    make test
    make lint

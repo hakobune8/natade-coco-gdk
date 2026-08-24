@@ -35,7 +35,7 @@
    make dev
    ```
 
-必要な環境はNode.js 22以上、pnpm 10.14.0、Go 1.25.12以上です。Dockerは
+必要な環境はNode.js 22以上、pnpm 10.14.0、Go 1.26.7以上です。Dockerは
 コンテナビルド時だけ必要です。詳しい流れは
 [Getting Started](docs/getting-started.md)を参照してください。
 
@@ -84,7 +84,10 @@ UI変更時のコンタクトシートを運用者へ渡します。イメージ
 されません。Fleet対象、Registry値、RuntimeClass、ロールアウト承認は運用者が
 担当します。ゲーム固有ControllerはLauncherから短命かつsame-tab限定のhandoffを受け取り、
 終了時は共通の`/control`へ戻ります。詳細は[ゲーム開発ガイド](docs/game-development.md)と
-[リリース引き渡し](docs/release-handoff.md)を参照してください。
+[リリース引き渡し](docs/release-handoff.md)を参照してください。ソース、workflow、
+依存関係、リリースの要件は
+[サプライチェーン・セキュリティ契約](docs/supply-chain-security-contract.md)で定義し、
+既存ゲームは[移行手順](docs/supply-chain-security-migration.md)を使用します。
 
 ## プラットフォーム契約を更新する
 
@@ -97,8 +100,10 @@ git diff -- vendor package.json pnpm-lock.yaml
 ```
 
 一時ディレクトリでオフライン検証に成功した場合だけゲーム側を変更し、更新元の
-Git SHAとtarballのSHA-256を`vendor/platform-set.json`へ記録します。4パッケージ
-すべてを1つのPull Requestとしてレビューしてください。
+Git SHAとtarballのSHA-256を`vendor/platform-set.json`へ記録します。リリース時には、
+公開イメージのdigestをこのGDKとplatform setへ結び付ける
+機械可読な証明も生成します。手順は[`docs/release-handoff.md`](docs/release-handoff.md)を参照してください。
+4パッケージすべてを1つのPull Requestとしてレビューしてください。
 
 ## 対象範囲と問い合わせ
 

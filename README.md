@@ -36,7 +36,7 @@ natadeCOCO platform and SDKs.
    make dev
    ```
 
-Prerequisites are Node.js 22+, pnpm 10.14.0, and Go 1.25.12+. Docker is
+Prerequisites are Node.js 22+, pnpm 10.14.0, and Go 1.26.7+. Docker is
 required only for the container build. See the complete
 [Getting Started guide](docs/getting-started.md) if this is your first game.
 
@@ -88,7 +88,11 @@ RuntimeClass selection, and rollout approval remain operator actions. A
 game-owned Controller receives a short-lived, same-tab Launcher handoff and returns to the
 shared `/control` entry when the run ends. See
 [Developing a game](docs/game-development.md) and
-[Release handoff](docs/release-handoff.md).
+[Release handoff](docs/release-handoff.md). Source, workflow, dependency, and
+release requirements are defined by the
+[supply-chain security contract](docs/supply-chain-security-contract.md); use
+the [migration guide](docs/supply-chain-security-migration.md) for an existing
+game.
 
 ## Update the platform contract
 
@@ -102,6 +106,9 @@ git diff -- vendor package.json pnpm-lock.yaml
 
 The command validates an offline candidate before changing the game and records
 the exact source Git SHA and archive checksums in `vendor/platform-set.json`.
+The release handoff also generates a machine-readable attestation that binds the
+published image digest to this exact GDK and platform set; see
+[`docs/release-handoff.md`](docs/release-handoff.md).
 Review the complete change in one pull request.
 
 ## Scope and help

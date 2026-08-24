@@ -1,6 +1,6 @@
 {
   "name": "natadecoco-game-gdk-reference",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.14.0",
@@ -24,11 +24,15 @@
     "@types/node": "24.0.15",
     "tsx": "4.20.3",
     "typescript": "5.8.3",
-    "vite": "7.0.6"
+    "vite": "7.3.6",
+    "yaml": "2.8.3"
   },
   "pnpm": {
     "overrides": {
-      "@natadecoco/protocol": "file:vendor/natadecoco-protocol-0.1.0.tgz"
+      "@natadecoco/protocol": "file:vendor/natadecoco-protocol-0.1.0.tgz",
+      "fast-uri": "3.1.5",
+      "nanoid": "3.3.18",
+      "postcss": "8.5.26"
     }
   }
 }
