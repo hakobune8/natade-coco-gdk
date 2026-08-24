@@ -28,8 +28,8 @@ importers:
         version: file:vendor/natadecoco-protocol-0.1.0.tgz
     devDependencies:
       '@types/node':
-        specifier: 24.0.15
-        version: 24.0.15
+        specifier: 26.2.0
+        version: 26.2.0
       tsx:
         specifier: 4.20.3
         version: 4.20.3
@@ -38,7 +38,7 @@ importers:
         version: 5.8.3
       vite:
         specifier: 7.3.6
-        version: 7.3.6(@types/node@24.0.15)(tsx@4.20.3)(yaml@2.8.3)
+        version: 7.3.6(@types/node@26.2.0)(tsx@4.20.3)(yaml@2.8.3)
       yaml:
         specifier: 2.8.3
         version: 2.8.3
@@ -502,8 +502,8 @@ packages:
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
-  '@types/node@24.0.15':
-    resolution: {integrity: sha512-oaeTSbCef7U/z7rDeJA138xpG3NuKc64/rZ2qmUFkFJmnMsAPaluIifqyWd8hSSMxyP9oie3dLAqYPblag9KgA==}
+  '@types/node@26.2.0':
+    resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
 
   ajv@8.20.0:
     resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
@@ -590,8 +590,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@7.8.0:
-    resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
+  undici-types@8.3.0:
+    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
   vite@7.3.6:
     resolution: {integrity: sha512-4XP60spRGjSZFf1qYH+dJIkK2znL3zQfl9KkOV9MkkRR/3Dls0dxaBsQPTloEc5BLXWPL9vsOxopxyKoMmDueg==}
@@ -893,9 +893,9 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
-  '@types/node@24.0.15':
+  '@types/node@26.2.0':
     dependencies:
-      undici-types: 7.8.0
+      undici-types: 8.3.0
 
   ajv@8.20.0:
     dependencies:
@@ -1042,9 +1042,9 @@ snapshots:
 
   typescript@5.8.3: {}
 
-  undici-types@7.8.0: {}
+  undici-types@8.3.0: {}
 
-  vite@7.3.6(@types/node@24.0.15)(tsx@4.20.3)(yaml@2.8.3):
+  vite@7.3.6(@types/node@26.2.0)(tsx@4.20.3)(yaml@2.8.3):
     dependencies:
       esbuild: 0.28.2
       fdir: 6.5.0(picomatch@4.0.5)
@@ -1053,7 +1053,7 @@ snapshots:
       rollup: 4.62.2
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 24.0.15
+      '@types/node': 26.2.0
       fsevents: 2.3.3
       tsx: 4.20.3
       yaml: 2.8.3
