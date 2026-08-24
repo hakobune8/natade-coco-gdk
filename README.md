@@ -36,7 +36,7 @@ natadeCOCO platform and SDKs.
    make dev
    ```
 
-Prerequisites are Node.js 22+, pnpm 10.14.0, and Go 1.25.12+. Docker is
+Prerequisites are Node.js 22+, pnpm 10.14.0, and Go 1.26.7+. Docker is
 required only for the container build. See the complete
 [Getting Started guide](docs/getting-started.md) if this is your first game.
 

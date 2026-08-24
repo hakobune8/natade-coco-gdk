@@ -35,7 +35,7 @@
    make dev
    ```
 
-必要な環境はNode.js 22以上、pnpm 10.14.0、Go 1.25.12以上です。Dockerは
+必要な環境はNode.js 22以上、pnpm 10.14.0、Go 1.26.7以上です。Dockerは
 コンテナビルド時だけ必要です。詳しい流れは
 [Getting Started](docs/getting-started.md)を参照してください。
 

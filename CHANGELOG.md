@@ -15,6 +15,7 @@ All notable changes to this game repository are recorded here. Releases use SemV
   game repositories.
 - Update Vite and vulnerable transitive packages until the moderate dependency
   audit is clean.
+- Build the reference image with the digest-pinned Go 1.26.7 security release.
 - Update the compatible platform set so a newly joined player safely replaces
   a disconnected slot owner after reconnect grace expiry while connected-owner
   conflicts remain fatal.
