@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
-import { relative, resolve } from "node:path";
+import { readFileSync, readdirSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
 import process from "node:process";
 import { parse } from "yaml";
 
@@ -94,7 +94,7 @@ export function workflowFindings(path, content, contract) {
 
 export function scanRepository(root, mode = "all", base = "") {
   const contract = loadContract(root);
-  const files = git(root, "ls-files", "-z").split("\0").filter(Boolean);
+  const files = repositoryFiles(root);
   const findings = [];
   if (["all", "unicode"].includes(mode)) {
     for (const path of files) {
@@ -250,7 +250,31 @@ function escapeRegExp(value) {
 }
 
 function git(root, ...arguments_) {
-  return execFileSync("git", ["-C", root, ...arguments_], { encoding: "utf8" });
+  return execFileSync("git", ["-C", root, ...arguments_], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+}
+
+function repositoryFiles(root) {
+  try {
+    return git(root, "ls-files", "-z").split("\0").filter(Boolean);
+  } catch {
+    const excludedDirectories = new Set([".git", "dist", "node_modules", "supply-chain"]);
+    const files = [];
+    const visit = (directory) => {
+      for (const entry of readdirSync(directory, { withFileTypes: true })) {
+        if (entry.isSymbolicLink()) continue;
+        if (entry.isDirectory()) {
+          if (!excludedDirectories.has(entry.name)) visit(join(directory, entry.name));
+        } else if (entry.isFile()) {
+          files.push(relative(root, join(directory, entry.name)));
+        }
+      }
+    };
+    visit(root);
+    return files.sort();
+  }
 }
 
 function assert(condition, message) {

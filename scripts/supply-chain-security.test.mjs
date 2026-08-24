@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
-import { workflowFindings, unicodeFindings } from "./supply-chain-security.mjs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { scanRepository, workflowFindings, unicodeFindings } from "./supply-chain-security.mjs";
 
 const contract = JSON.parse(readFileSync("config/supply-chain-security-contract.json", "utf8"));
 const sha = "a".repeat(40);
@@ -59,4 +61,18 @@ jobs:
     .some((finding) => finding.message.includes("full commit SHA")));
   const pinned = workflow.replace(":latest", `@sha256:${"b".repeat(64)}`);
   assert.deepEqual(workflowFindings(".github/workflows/fixture.yml", pinned, contract), []);
+});
+
+test("scans a generated candidate without Git metadata", () => {
+  const root = mkdtempSync(join(tmpdir(), "gdk-security-candidate-"));
+  try {
+    mkdirSync(join(root, "config"));
+    writeFileSync(join(root, "config/supply-chain-security-contract.json"), JSON.stringify(contract));
+    writeFileSync(join(root, "candidate.ts"), `visible${String.fromCodePoint(0x200b)}hidden`);
+    const findings = scanRepository(root, "unicode");
+    assert.equal(findings.length, 1);
+    assert.equal(findings[0].path, "candidate.ts");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
