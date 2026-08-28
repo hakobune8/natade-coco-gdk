@@ -4,6 +4,17 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-28
+
+- Add the opt-in transient WebRTC input contract without changing the reliable
+  WebSocket `sendInput()` and `onInput()` state-synchronization semantics.
+- Expose `sendTransientInput()` to Controllers, `onTransientInput()` to
+  Displays, and `transientInputAvailable` in SDK connection state.
+- Add the bounded `input.transient` and `input.transient.received` protocol
+  envelopes used by the authenticated Realtime Gateway data plane.
+- Refresh the complete vendored platform set from reviewed Edge revision
+  `5f6821cf2f9f6d95699d602d21e632d54b2c0957`.
+
 ## [0.7.1] - 2026-08-24
 
 - Update the reference toolchain to TypeScript 7.0.2, Vite 8.2.2, tsx 4.23.12,
