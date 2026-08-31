@@ -27,6 +27,10 @@ Keep `game.yaml` accurate as behavior changes:
   `joinPolicy: while-playing`;
 - `runtimeCompatibility`: the supported Runtime major range.
 
+For intermittent visitors, see the independent
+[empty-session lifecycle policy](empty-session-policy.md). The reference game's
+default remains termination after every disconnected player expires.
+
 ### Artwork contract
 
 Games may provide Launcher-owned presentation metadata without giving the
