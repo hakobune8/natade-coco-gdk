@@ -9,6 +9,9 @@ All notable changes to this game repository are recorded here. Releases use SemV
   preserves the existing behavior.
 - Refresh all four vendored Platform packages together; document Runtime 1.1
   rollout prerequisites and independent player-slot expiry.
+- Pin the complete set to merged upstream revision
+  `7d208c71f4300083dc5822c63e5b0897dd97315f`; package archive checksums are
+  unchanged from the tested candidate.
 - Publication and hardware acceptance remain pending.
 
 ## [0.8.0] - 2026-08-28
