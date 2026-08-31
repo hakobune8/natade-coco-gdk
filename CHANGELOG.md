@@ -4,6 +4,13 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Prepare 0.9.0 with the additive `emptySessionPolicy` contract: explicit
+  `keep-alive` keeps an empty playing session, while omitted/`terminate`
+  preserves the existing behavior.
+- Refresh all four vendored Platform packages together; document Runtime 1.1
+  rollout prerequisites and independent player-slot expiry.
+- Publication and hardware acceptance remain pending.
+
 ## [0.8.0] - 2026-08-28
 
 - Add the opt-in transient WebRTC input contract without changing the reliable

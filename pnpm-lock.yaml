@@ -202,20 +202,20 @@ packages:
     os: [win32]
 
   '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-E812dGpZ+pTzddOrapitQH/URFEYy6OOE9FByLdOkUGdp/UGJsLF7ICbVxAGaVHT1EM2VgT0cmsnHAvUA0oUlA==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-Vcn8Utl0kHLIJOtiar5lX5pqBPJxyXOeBcLOfgH1dlofOyxx2O9DZPguwNeooYo3VRkpAYhgQXuA1+/dwwJq/A==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-oY9aXmpZSx+XjwlYF2vba/lXGf6c/p9O0L38RoSRmTgBKxDeGTm9sbSlB6WEroyxiu6IcGUWDfjMEpcV39Op3Q==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-SKi6aWmUmjZ+tm0hz7jS5v6pWgV7ThZdDSWpdOmANhAtbpgUVSeNZSwg/Gz/hs48WfR9XeVr6Y1GD2MS+Vfn+Q==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
-    resolution: {integrity: sha512-YFEZX/+cRbcXGYef5O+lhlxVTSXeAt+j4tlwUffCR8IqEmIeCczAUGIAFOdjmsg+tzP9zy16k+VVKq+79KHQMg==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
+    resolution: {integrity: sha512-QrpQaoycvOpzXAA5yRM4/Yx53+2aVGKTW+rewG6eDAmNsn0+oQ2uLgFTHBgnITfmviyJbnoxSjghRM0FQzY1dQ==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
     version: 0.1.0
     hasBin: true
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz':
-    resolution: {integrity: sha512-yIWdOdje36nKDciRlmvsilMeB0UpYSfaEw52BeyeIuhKDd+sPBJc4GTF9oDmRc+ozGOzezLDEOYrVhGrqNpgkw==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
+    resolution: {integrity: sha512-+xXw6Rc44UX0a6qr3+5bnalANeaHOGfI6P+7set0FJXRkBmVapZoae9QZXQh9rNTbWMlkyau8t76g4Xevx0VAw==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
     version: 0.1.0
 
   '@oxc-project/types@0.146.0':
