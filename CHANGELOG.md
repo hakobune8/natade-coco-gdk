@@ -4,6 +4,8 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Record merged Edge PR #746 as the platform set source revision; the four
+  vendored package archives are unchanged from the reviewed candidate.
 - Prepare 0.9.0 with the additive `emptySessionPolicy` contract: explicit
   `keep-alive` keeps an empty playing session, while omitted/`terminate`
   preserves the existing behavior.
