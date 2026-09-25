@@ -57,11 +57,24 @@ function waitForOrganizer(finishedRunId: string): void {
   void poll();
 }
 
-export function runDisplayPreview(root: HTMLElement, result = false): void {
-  const players: Player[] = [1, 2, 3, 4].map((slot) => ({ playerId: `p${slot}`, slot, displayName: `Player ${slot}`, connected: slot !== 4, lastSeenAt: new Date().toISOString() }));
+export async function runDisplayPreview(root: HTMLElement, result = false): Promise<void> {
+  const players: Player[] = [1, 2, 3, 4].map((slot) => ({ playerId: `p${slot}`, slot, displayName: `Player ${slot}`, connected: true, lastSeenAt: new Date().toISOString() }));
   const scores = new Map(players.map((player, index) => [player.playerId, [8, 5, 3, 1][index] ?? 0]));
-  if (result) renderResults(root, rank(players, scores), players);
-  else renderDisplay(root, players, new Map([["p1", { buttons: { right: true, action1: true } }], ["p2", { buttons: { up: true } }]]), scores, 34_000);
+  if (result) { renderResults(root, rank(players, scores), players); return; }
+  const { subscribeLocalPreviewInputs } = await import("@natadecoco/controller-sdk/local-dev");
+  const inputs = new Map<string, InputState>();
+  const pressed = new Set<string>();
+  const render = (): void => renderDisplay(root, players, inputs, scores, 34_000);
+  const remove = subscribeLocalPreviewInputs(({ playerId, input }) => {
+    inputs.set(playerId, input);
+    const active = Boolean(input.buttons?.action1);
+    if (active && !pressed.has(playerId)) scores.set(playerId, (scores.get(playerId) ?? 0) + 1);
+    if (active) pressed.add(playerId);
+    else pressed.delete(playerId);
+    render();
+  });
+  render();
+  window.addEventListener("pagehide", remove, { once: true });
 }
 
 function renderDisplay(root: HTMLElement, players: readonly Player[], inputs: ReadonlyMap<string, InputState>, scores: ReadonlyMap<string, number>, remaining: number): void {

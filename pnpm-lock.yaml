@@ -15,8 +15,8 @@ importers:
   .:
     dependencies:
       '@natadecoco/controller-sdk':
-        specifier: file:vendor/natadecoco-controller-sdk-0.1.0.tgz
-        version: file:vendor/natadecoco-controller-sdk-0.1.0.tgz
+        specifier: file:vendor/natadecoco-controller-sdk-0.2.1.tgz
+        version: file:vendor/natadecoco-controller-sdk-0.2.1.tgz
       '@natadecoco/display-sdk':
         specifier: file:vendor/natadecoco-display-sdk-0.1.0.tgz
         version: file:vendor/natadecoco-display-sdk-0.1.0.tgz
@@ -201,21 +201,21 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-Vcn8Utl0kHLIJOtiar5lX5pqBPJxyXOeBcLOfgH1dlofOyxx2O9DZPguwNeooYo3VRkpAYhgQXuA1+/dwwJq/A==, tarball: file:vendor/natadecoco-controller-sdk-0.1.0.tgz}
-    version: 0.1.0
+  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.2.1.tgz':
+    resolution: {integrity: sha512-310LWPUg5Xju4KmAXDEPDQiC8Ox7KIeAqR6+WTtWL5MGLzvUKyjwgCid3ufFSyazx1nhoNLF9s2lIPLokfmdRQ==, tarball: file:vendor/natadecoco-controller-sdk-0.2.1.tgz}
+    version: 0.2.1
 
   '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-SKi6aWmUmjZ+tm0hz7jS5v6pWgV7ThZdDSWpdOmANhAtbpgUVSeNZSwg/Gz/hs48WfR9XeVr6Y1GD2MS+Vfn+Q==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
+    resolution: {integrity: sha512-0dzdUaXjtf5yFlYQkRSFGIyeIok28nc+cJi8JwgWs2mGxwRVbvCLKhGgo2D/mqTEUKjLxVVvtdxbd/S9cJU4yQ==, tarball: file:vendor/natadecoco-display-sdk-0.1.0.tgz}
     version: 0.1.0
 
   '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.1.0.tgz':
-    resolution: {integrity: sha512-QrpQaoycvOpzXAA5yRM4/Yx53+2aVGKTW+rewG6eDAmNsn0+oQ2uLgFTHBgnITfmviyJbnoxSjghRM0FQzY1dQ==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
+    resolution: {integrity: sha512-s9m/ad7BZo1gPg99ikIYyWq33GSqx3UGyJ10hpmDPYe361ikrbDsQakpd4cLoClbP9cTKY2wz5t82yk3MWqG7A==, tarball: file:vendor/natadecoco-game-schema-0.1.0.tgz}
     version: 0.1.0
     hasBin: true
 
   '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.1.0.tgz':
-    resolution: {integrity: sha512-+xXw6Rc44UX0a6qr3+5bnalANeaHOGfI6P+7set0FJXRkBmVapZoae9QZXQh9rNTbWMlkyau8t76g4Xevx0VAw==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
+    resolution: {integrity: sha512-ERME94N9oqee2+2r37PGIo8o9S238g+0Oqd0RtXYjE8X+q8AktZp1R9kqjbDOldpvDo4CRwHYIE8C3PdPbvM5Q==, tarball: file:vendor/natadecoco-protocol-0.1.0.tgz}
     version: 0.1.0
 
   '@oxc-project/types@0.146.0':
@@ -716,7 +716,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.1.0.tgz':
+  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.2.1.tgz':
     dependencies:
       '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.1.0.tgz
 

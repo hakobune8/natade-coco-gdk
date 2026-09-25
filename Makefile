@@ -1,6 +1,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 PNPM ?= pnpm
+HOST ?= 127.0.0.1
 
 .PHONY: help init-game update-platform setup lint test validate security-check release-check release-attestation release-attestation-check build dev container-build clean
 
@@ -53,7 +54,7 @@ build: ## Build browser assets and static server
 	@cd server && GOWORK=off go build -trimpath -o ../dist/static-web .
 
 dev: ## Start the Display/Controller preview server
-	@$(PNPM) dev
+	@$(PNPM) dev --host $(HOST)
 
 container-build: ## Build the immutable game image locally
 	@docker build --build-arg VERSION=0.9.0 --build-arg REVISION=$$(git rev-parse HEAD 2>/dev/null || echo unknown) -t gdk-reference:0.9.0 .

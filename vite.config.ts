@@ -1,7 +1,9 @@
 import { defineConfig } from "vite";
+import { localControllerInputRelay } from "@natadecoco/controller-sdk/local-dev-vite";
 
 export default defineConfig({
   base: "/games/gdk-reference/",
+  plugins: [localControllerInputRelay()],
   server: {
     port: 5176,
     proxy: {
