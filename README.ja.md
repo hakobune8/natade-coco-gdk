@@ -45,6 +45,9 @@
 - Result: `http://127.0.0.1:5176/games/gdk-reference/display?preview=result`
 - Controller: `http://127.0.0.1:5176/games/gdk-reference/controller?preview=controller`
 
+Display と Controller を同時に開くと、Controller の方向入力と ACTION が Display に反映されます。複数の Controller を開く場合は `&slot=1`〜`&slot=4` を指定してください。Vite の開発用 WebSocket が入力を中継します。
+別端末から確認する場合は、信頼できるローカルネットワークで `make dev HOST=0.0.0.0` を実行し、URL の `127.0.0.1` を開発機の LAN アドレスに置き換えます。
+
 プレビューモードはEdge Nodeなしで利用でき、開発ビルドでのみ有効です。本番では
 natadeCOCO LauncherとJoin Pageから起動情報を受け取り、認証情報をURLへ含めません。
 

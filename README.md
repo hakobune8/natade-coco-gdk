@@ -46,6 +46,9 @@ required only for the container build. See the complete
 - Result: `http://127.0.0.1:5176/games/gdk-reference/display?preview=result`
 - Controller: `http://127.0.0.1:5176/games/gdk-reference/controller?preview=controller`
 
+Open Display and Controller together to see directional and ACTION inputs on Display. Add `&slot=1` through `&slot=4` to open multiple Controllers. Vite's development WebSocket relays the inputs.
+For another device on a trusted local network, run `make dev HOST=0.0.0.0` and replace `127.0.0.1` in the URLs with the development machine's LAN address.
+
 Preview mode needs no Edge node and is available only in the development build.
 Production pages accept launch credentials from the natadeCOCO Launcher and
 Join Page; credentials are never placed in URLs.

@@ -1,4 +1,4 @@
-import { createControllerClient, mountControllerProfileUI, type ControllerClient, type ControllerSdkError } from "@natadecoco/controller-sdk";
+import { createControllerClient, mountControllerProfileUI, type ControllerClient, type ControllerSdkError, type GameUIControllerClient } from "@natadecoco/controller-sdk";
 import type { SessionState } from "@natadecoco/protocol";
 import {
   DISPLAY_NAME,
@@ -78,10 +78,17 @@ export async function runController(root: HTMLElement, handoff: ControllerHandof
   await client.connect();
 }
 
-export function runControllerPreview(root: HTMLElement): void {
-  const controller = mountController(root, 2, "Player 2");
+export async function runControllerPreview(root: HTMLElement): Promise<void> {
+  const { createLocalPreviewController } = await import("@natadecoco/controller-sdk/local-dev");
+  const requestedSlot = Number(new URLSearchParams(window.location.search).get("slot") ?? "2");
+  const slot = Number.isInteger(requestedSlot) && requestedSlot >= 1 && requestedSlot <= 4 ? requestedSlot : 2;
+  const local = createLocalPreviewController(slot);
+  const controller = mountController(root, slot, `Player ${slot}`, undefined, undefined, local.client);
   controller.setPlatformControl({ mode: "playing", role: "organizer", hasLease: true });
-  controller.setPlatformSession({ state: "finished", runId: "preview-run" });
+  controller.setPlatformSession({ state: "playing", runId: "preview-run" });
+  const removeState = local.client.onStateChanged((state) => controller.setConnected(state.state === "connected"));
+  controller.setConnected(local.client.getState().state === "connected");
+  window.addEventListener("pagehide", () => { removeState(); local.dispose(); }, { once: true });
 }
 
 interface OrganizerActions {
@@ -90,15 +97,17 @@ interface OrganizerActions {
 }
 
 export interface MountedController {
+  setConnected(connected: boolean): void;
   setPlatformControl(state: PlatformControlState): void;
   setPlatformSession(state: PlatformSessionState): void;
   setBusy(busy: boolean): void;
   setActionError(message: string): void;
 }
 
-function mountController(root: HTMLElement, slot: number, playerName: string, client?: ControllerClient, actions?: OrganizerActions): MountedController {
+function mountController(root: HTMLElement, slot: number, playerName: string, client?: ControllerClient, actions?: OrganizerActions, previewClient?: GameUIControllerClient): MountedController {
+  const inputClient = previewClient ?? client;
   root.innerHTML = `<section class="controller-shell natadecoco-safe-area">
-    <header><span class="player-badge">${slot}P</span><div><p class="eyebrow">${DISPLAY_NAME}</p><h1>${escapeText(playerName)}</h1></div><span class="connection" role="status">${client ? "接続中" : "プレビュー"}</span></header>
+    <header><span class="player-badge">${slot}P</span><div><p class="eyebrow">${DISPLAY_NAME}</p><h1>${escapeText(playerName)}</h1></div><span class="connection" role="status">${inputClient ? "接続中" : "プレビュー"}</span></header>
     <p class="guide">大画面を見ながら方向パッドで操作してください</p>
     <div class="control-surface natadecoco-control-surface" aria-label="ゲーム操作"></div>
     <section class="organizer-actions" aria-label="主催者メニュー" hidden>
@@ -120,7 +129,8 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
   let platformSession: PlatformSessionState = { state: client ? "waiting" : "playing" };
   let busy = false;
   let endArmed = false;
-  const controls = mountControllerProfileUI({ element: surface, profile: "directional-pad", disabled: Boolean(client), onInput: (input) => { client?.sendInput(input); if (input.buttons?.action1) client?.vibrate(20); } });
+  let connected = !inputClient;
+  const controls = mountControllerProfileUI({ element: surface, profile: "directional-pad", disabled: Boolean(inputClient), onInput: (input) => { inputClient?.sendInput(input); if (input.buttons?.action1) inputClient?.vibrate(20); } });
   const removeTouchGuards = client?.installTouchGuards(surface);
   const lifecycle = createControllerLifecycle(() => undefined);
   const renderLifecycle = (): void => {
@@ -129,7 +139,7 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
     restart.hidden = platformSession.state !== "finished";
     restart.disabled = busy || platformSession.state !== "finished";
     end.disabled = busy;
-    controls.setDisabled(Boolean(client) && platformSession.state !== "playing");
+    controls.setDisabled(Boolean(inputClient) && (!connected || platformSession.state !== "playing"));
     session.textContent = platformSession.state === "playing" ? "プレイ中" : platformSession.state === "finished" ? "結果表示中" : platformSession.state;
   };
   restart.addEventListener("click", () => void actions?.restart());
@@ -146,7 +156,7 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
     void actions?.end();
   });
   const unsubscribers = client ? [
-    client.onStateChanged((state) => { const online = state.state === "connected"; connection.textContent = online ? "オンライン" : state.state === "reconnecting" ? "再接続中" : "接続中"; latency.textContent = `PING ${state.roundTripMs === undefined ? "--" : Math.round(state.roundTripMs)} ms`; controls.setDisabled(!online || platformSession.state !== "playing"); }),
+    client.onStateChanged((state) => { connected = state.state === "connected"; connection.textContent = connected ? "オンライン" : state.state === "reconnecting" ? "再接続中" : "接続中"; latency.textContent = `PING ${state.roundTripMs === undefined ? "--" : Math.round(state.roundTripMs)} ms`; renderLifecycle(); }),
     client.onSessionStateChanged((state: SessionState) => {
       platformSession = { ...platformSession, state };
       renderLifecycle();
@@ -158,6 +168,7 @@ function mountController(root: HTMLElement, slot: number, playerName: string, cl
   window.addEventListener("pagehide", () => { unsubscribers.forEach((remove) => remove()); removeTouchGuards?.(); controls.destroy(); client?.disconnect("controller page hidden"); }, { once: true });
   renderLifecycle();
   return {
+    setConnected(value) { connected = value; connection.textContent = value ? "オンライン" : "再接続中"; renderLifecycle(); },
     setPlatformControl(state) {
       platformControl = state;
       renderLifecycle();
