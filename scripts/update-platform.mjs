@@ -12,13 +12,16 @@ const packageNames = ["protocol", "controller-sdk", "display-sdk", "game-schema"
 
 try {
   const source = resolve(process.argv[2] ?? "");
-  if (!process.argv[2]) throw new Error("usage: node scripts/update-platform.mjs <natade-coco-edge-path>");
+  const options = process.argv.slice(3);
+  if (!process.argv[2] || options.some((option) => option !== "--with-working-tree") || options.length > 1) {
+    throw new Error("usage: node scripts/update-platform.mjs <natade-coco-edge-path> [--with-working-tree]");
+  }
   const platformRoot = await directoryExists(join(source, "game-platform", "packages"))
     ? join(source, "game-platform")
     : source;
   if (!(await directoryExists(join(platformRoot, "packages")))) throw new Error("game-platform/packages is missing from the platform source");
   const sourceRepositoryRoot = output("git", ["rev-parse", "--show-toplevel"], platformRoot).trim();
-  assertClean(repositoryRoot, "game repository");
+  if (!options.includes("--with-working-tree")) assertClean(repositoryRoot, "game repository");
   assertClean(sourceRepositoryRoot, "platform source");
   const revision = output("git", ["rev-parse", "HEAD"], sourceRepositoryRoot).trim();
   const repository = normalizeRemote(output("git", ["config", "--get", "remote.origin.url"], sourceRepositoryRoot).trim());

@@ -1,5 +1,5 @@
-import { consumeControllerHandoff, CONTROLLER_PATH, DISPLAY_PATH, parseLaunchContext } from "./contract.js";
-import { runController, runControllerPreview } from "./controller.js";
+import { CONTROLLER_PATH, DISPLAY_PATH, parseLaunchContext } from "./contract.js";
+import { runControllerPreview } from "./controller.js";
 import { runDisplay, runDisplayPreview } from "./display.js";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -10,9 +10,7 @@ async function boot(): Promise<void> {
   const preview = import.meta.env.DEV ? new URLSearchParams(window.location.search).get("preview") : null;
   if (path === CONTROLLER_PATH) {
     if (preview === "controller") return runControllerPreview(root!);
-    const handoff = consumeControllerHandoff(sessionStorage, Date.now(), window.location.origin);
-    if (!handoff) return showError("コントローラを開けません", "大画面のQRコードからもう一度参加してください。");
-    try { await runController(root!, handoff); } catch { showError("ゲームへ接続できません", "通信を確認して再接続してください。"); }
+    window.location.replace("/controller/");
     return;
   }
   if (path !== DISPLAY_PATH) return showError("ゲーム画面ではありません", "ランチャーからゲームを開始してください。");

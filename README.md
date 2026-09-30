@@ -58,11 +58,11 @@ Join Page; credentials are never placed in URLs.
 | File | Purpose |
 | --- | --- |
 | `src/display.ts` | Game state, large-screen rendering, score, and result flow |
-| `src/controller.ts` | Phone controls, organizer-only rematch, and two-step end action |
+| `src/controller.ts` | Development input preview; production controls are owned by Platform |
 | `src/styles.css` | Display and responsive phone layout |
 | `game.yaml` | Players, duration, browser features, routes, and compatibility |
-| `src/contract.test.ts` | Game-specific launch and handoff contract tests |
-| `src/controller.test.ts` | Organizer authority, rematch/end, and stable `/control` return tests |
+| `src/contract.test.ts` | Display launch and Platform session observation tests |
+| `src/controller.test.ts` | Platform route and credential ownership contract tests |
 
 The starter uses simple Canvas/CSS visuals so you can replace the game without
 untangling platform code. Read [Developing a game](docs/game-development.md) for
@@ -87,9 +87,8 @@ make container-build
 Provide the operator with the SemVer version, reviewed Git SHA, immutable image
 digest, SBOMs, vulnerability result, and a contact sheet for visible UI changes.
 Publishing an image does not deploy it. Fleet targeting, Registry values,
-RuntimeClass selection, and rollout approval remain operator actions. A
-game-owned Controller receives a short-lived, same-tab Launcher handoff and returns to the
-shared `/control` entry when the run ends. See
+RuntimeClass selection, and rollout approval remain operator actions. The Platform-owned `/controller/` consumes the same-tab Launcher handoff and
+provides common lifecycle operations; game routes only redirect there. See
 [Developing a game](docs/game-development.md) and
 [Release handoff](docs/release-handoff.md). Source, workflow, dependency, and
 release requirements are defined by the
@@ -128,3 +127,8 @@ integrated deployment.
 - Supported scope: read [SUPPORT.md](SUPPORT.md)
 
 Licensed under Apache-2.0. OCI source label: `https://github.com/hakobune8/natade-coco-gdk`.
+
+For a breaking SDK change, edit the game sources and run
+`node scripts/update-platform.mjs <edge-path> --with-working-tree`. The updater
+validates the edited game and all four new archives together before replacing
+the vendor set. The platform source must remain clean.

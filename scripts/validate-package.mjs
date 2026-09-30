@@ -28,7 +28,7 @@ assert(packageJSON.pnpm?.overrides?.["@natadecoco/protocol"] === `file:vendor/${
 const actualArchives = readdirSync("vendor").filter((name) => name.endsWith(".tgz")).sort();
 const expectedArchives = expectedPackages.map((name) => platformSet.packages[name].archive).sort();
 assert(JSON.stringify(actualArchives) === JSON.stringify(expectedArchives), "vendor must contain exactly one complete platform set");
-assert(manifest.includes(`name: ${gameID}`) && manifest.includes(`/games/${gameID}/display`) && manifest.includes(`/games/${gameID}/controller`), "Game identity and routes must agree");
+assert(manifest.includes(`name: ${gameID}`) && manifest.includes(`/games/${gameID}/display`) && manifest.includes("controllerImplementation:") && !manifest.includes("controllerPath:"), "Game identity and routes must agree");
 assert(manifest.includes("registry.example.invalid/"), "starter manifest must remain non-deployable until promotion values are reviewed");
 assert(/^# syntax=docker\/dockerfile:[^@\n]+@sha256:[a-f0-9]{64}$/m.test(dockerfile), "Dockerfile frontend must be digest pinned");
 assert(!/:latest\b/.test(dockerfile), "latest is forbidden");

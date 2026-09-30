@@ -4,6 +4,18 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Pin the existing fast-uri override to 3.1.8 to pass the dependency audit.
+- Prepare 0.10.0 for the Platform-owned Controller contract. Production game
+  routes redirect to `/controller/` without reading participant credentials.
+- Remove game-owned authentication, control heartbeat, organizer operations,
+  connection chrome, and the legacy `controllerPath` Manifest field.
+- Retain the local Controller input relay and Display scoring preview through
+  the public development input facade; custom games receive bounded UI context.
+- Update all four Platform packages together, with candidate validation of game
+  edits supported by the explicit `--with-working-tree` migration option.
+
+## [0.9.0]
+
 - Record merged Edge PR #746 as the platform set source revision; the four
   vendored package archives are unchanged from the reviewed candidate.
 - Prepare 0.9.0 with the additive `emptySessionPolicy` contract: explicit

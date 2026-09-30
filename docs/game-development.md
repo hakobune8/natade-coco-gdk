@@ -3,8 +3,8 @@
 ## Runtime mental model
 
 The Display SDK subscribes to players, session state, and latest controller
-input. The Controller SDK handles authenticated WebSocket connection, sequence,
-input scheduling, heartbeat, and reconnect. Game code maps semantic input to
+input. The Platform Controller handles authenticated WebSocket connection, sequence,
+input scheduling, heartbeat, and reconnect. The game SDK provides UI/input contracts. Game code maps semantic input to
 game rules and submits one idempotent result for the active run.
 
 Do not build a second room, token, player-slot, or WebSocket system inside the
@@ -69,34 +69,22 @@ platform sets, and release metadata mismatches.
 
 ## Controller rules
 
-- Use the provided Controller Profile semantics before inventing raw messages.
-- Make touch targets large and prevent scroll and text selection during play.
-- Respect safe areas and test portrait and landscape where declared.
-- Treat vibration, Wake Lock, orientation, and fullscreen as optional features.
-- Never put a token or reconnect handle in a URL or localStorage.
-- Treat `/control` as the stable platform entry. The Launcher consumes the
-  catalog lease, creates or reconnects the player, stores one short-lived
-  handoff in `sessionStorage`, and navigates to the exact game Controller path.
-- Keep calling the platform control heartbeat while the game Controller is
-  open. This preserves the organizer lease across the game route.
-- The game owns its result UX. On `finished`, disable game input and keep the
-  result visible while the organizer chooses **Play again** or **End game**.
-- Show rematch/end actions only when the platform heartbeat says
-  `role: organizer` and `hasLease: true`. Never infer organizer authority from
-  player slot, a query parameter, or game-local storage.
-- Rematch calls the organizer-authorized platform endpoint, retains the player
-  roster, and creates a fresh run ID. Rebuild all run-scoped game state from
-  zero when that run appears.
-- End game terminates the session and returns every surface to Launcher.
-  `resultDisplaySeconds` is a fail-safe window, not an automatic game-owned
-  redirect.
-- On `terminated` or terminal `error`, disable input and return to `/control`
-  after the heartbeat reports a mode other than `playing`; do not invent a
-  second lobby or home route.
-
-This v1 top-level handoff intentionally lets the game Controller use the
-Controller SDK directly. A sandboxed iframe/message bridge is a possible
-future security boundary, not a requirement of this contract.
+- Declare `controllerImplementation`. The starter uses `platform-profile` with
+  `directional-pad`; use `game-module` v1 for custom controls.
+- Launcher and Join Page pass the validated same-tab handoff to `/controller/`.
+  Game routes only redirect there and never consume or refresh credentials.
+- A custom module receives `ControllerUIModuleContext` and renders into its
+  content element using the restricted `GameUIControllerClient`. Release UI
+  subscriptions in `destroy()` and consume `onPlatformSnapshot` for presentation.
+- Platform owns the frame, heartbeat, WSS/WebRTC, host operations, reconnect,
+  orientation, and session return. Game modules do not start those operations.
+- Use the supported profile semantics, large touch targets, and safe areas.
+  Test declared orientations. Vibration and other browser features are optional.
+- Never put credentials in a URL or localStorage. The module has no token.
+- On `finished`, disable game input. Platform exposes authorized rematch/end
+  actions and creates a fresh run ID. Reset Display game state for the new run.
+- The local preview renders controls against the SDK's development input facade;
+  it does not mount a production Shell or emulate organizer authority.
 
 ## Offline and security boundary
 
@@ -115,7 +103,7 @@ and synchronization semantics.
 ## Testing strategy
 
 Unit-test game rules separately from SDK transport. Contract tests cover launch
-context and bounded same-tab Controller handoff. Add browser tests for behavior that
+context and the UI/input ownership boundary. Add browser tests for behavior that
 depends on layout, touch, reload, or reconnect. UI changes require a contact
 sheet; latency, device, and offline claims require evidence from the relevant
 environment.
