@@ -4,6 +4,7 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Pin the existing fast-uri override to 3.1.8 to pass the dependency audit.
 - Prepare 0.10.0 for the Platform-owned Controller contract. Production game
   routes redirect to `/controller/` without reading participant credentials.
 - Remove game-owned authentication, control heartbeat, organizer operations,
