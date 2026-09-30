@@ -56,11 +56,11 @@ natadeCOCO LauncherとJoin Pageから起動情報を受け取り、認証情報�
 | ファイル | 役割 |
 | --- | --- |
 | `src/display.ts` | ゲーム状態、大画面描画、スコア、結果表示 |
-| `src/controller.ts` | スマートフォン操作、主催者専用の再試合、二段階の終了操作 |
+| `src/controller.ts` | 開発用入力プレビュー。本番の共通操作はPlatformが担当 |
 | `src/styles.css` | 大画面とスマートフォンのレスポンシブレイアウト |
 | `game.yaml` | 人数、時間、ブラウザ機能、URL、互換性 |
 | `src/contract.test.ts` | ゲーム固有の起動・Controller引き渡しテスト |
-| `src/controller.test.ts` | 主催者権限、再試合・終了、共通`/control`復帰テスト |
+| `src/controller.test.ts` | Platformへの遷移・認証情報の所有境界テスト |
 
 スターターは単純なCanvas/CSS表示のため、プラットフォームコードを分解せずに
 ゲーム部分を置き換えられます。SDKの考え方、マニフェスト、スマートフォン対応、
@@ -85,8 +85,8 @@ make container-build
 SemVer、レビュー済みGit SHA、変更不能なimage digest、SBOM、脆弱性検査結果、
 UI変更時のコンタクトシートを運用者へ渡します。イメージを公開しただけでは配布
 されません。Fleet対象、Registry値、RuntimeClass、ロールアウト承認は運用者が
-担当します。ゲーム固有ControllerはLauncherから短命かつsame-tab限定のhandoffを受け取り、
-終了時は共通の`/control`へ戻ります。詳細は[ゲーム開発ガイド](docs/game-development.md)と
+担当します。Platformの`/controller/`がsame-tabのhandoffと共通の操作・接続処理を担当し、
+ゲームのController経路はそこへ転送します。詳細は[ゲーム開発ガイド](docs/game-development.md)と
 [リリース引き渡し](docs/release-handoff.md)を参照してください。ソース、workflow、
 依存関係、リリースの要件は
 [サプライチェーン・セキュリティ契約](docs/supply-chain-security-contract.md)で定義し、
@@ -121,3 +121,8 @@ Realtime Gateway、Game Catalogを構築・運用しません。これらがな�
 - サポート範囲: [SUPPORT.md](SUPPORT.md)
 
 Apache-2.0 License。OCI source label: `https://github.com/hakobune8/natade-coco-gdk`。
+
+SDKの破壊的変更はゲームソースを編集してから
+`node scripts/update-platform.mjs <edge-path> --with-working-tree`で更新します。
+編集後のソースと4パッケージを一時候補で検証し、成功した場合だけvendorを置き換えます。
+Platform側のcheckoutはクリーンな状態が必要です。

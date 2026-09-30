@@ -2,10 +2,10 @@ apiVersion: v2
 name: natadecoco-game-gdk-reference
 description: Thin wrapper for the shared natadeCOCO game workload chart
 type: application
-version: 0.9.0
-appVersion: "0.9.0"
+version: 0.10.0
+appVersion: "0.10.0"
 dependencies:
   - name: natadecoco-game
     alias: game
-    version: 0.2.0
+    version: 0.4.0
     repository: oci://registry.example.invalid/natadecoco/charts
