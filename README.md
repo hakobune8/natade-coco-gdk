@@ -113,6 +113,28 @@ published image digest to this exact GDK and platform set; see
 [`docs/release-handoff.md`](docs/release-handoff.md).
 Review the complete change in one pull request.
 
+## Maintain dependencies
+
+Normal minor/patch updates are grouped separately for npm, Go, and GitHub
+Actions. Major and security updates stay individual. The shared SDK set and
+current Trivy/SBOM Actions follow the exceptions and checks in
+[Dependency maintenance](SECURITY.md#dependency-maintenance).
+
+The common grouping configuration originates in
+`natade-coco-edge/game-platform/developer-kit/template/.github/dependabot.yml`.
+This copy is synchronized from Edge revision
+`e5124c0f0c7479978c99fbbc501871a8775bfd0a`. Future changes are reviewed in Edge's
+generator first, then applied to this repository in a separate configuration PR.
+Preserve this GDK's existing security contract and CI during synchronization;
+its scanner, fixtures, and source-security/CodeQL jobs are ahead of the generator
+starter. The grouping change does not synchronize that older starter's security
+contract.
+
+A new **Use this template** repository inherits these files. Existing games do
+not receive later template changes automatically; apply reviewed settings in
+an individual PR using the [migration guide](docs/supply-chain-security-migration.md#maintain-dependabot-settings).
+Do not regenerate or overwrite an existing game to synchronize configuration.
+
 ## Scope and help
 
 This repository does not install or operate k3s, Fleet, DNS, TLS, Wi-Fi,

@@ -5,13 +5,37 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        # The four shared SDK packages use the existing exact-set update path.
+        exclude-patterns: ["@natadecoco/*"]
+        update-types: [minor, patch]
+
   - package-ecosystem: gomod
     directory: /server
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    groups:
+      gomod-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        # The starter server currently has no external dependencies.
+        # Review compatibility and exclusions when adding v0 modules.
+        update-types: [minor, patch]
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        # v0 security/release tooling requires individual gate/SBOM verification.
+        # These exclusions also keep patch updates individual, not ignored.
+        exclude-patterns: ["aquasecurity/trivy-action", "anchore/sbom-action*"]
+        update-types: [minor, patch]
