@@ -108,6 +108,25 @@ Git SHAとtarballのSHA-256を`vendor/platform-set.json`へ記録します。リ
 機械可読な証明も生成します。手順は[`docs/release-handoff.md`](docs/release-handoff.md)を参照してください。
 4パッケージすべてを1つのPull Requestとしてレビューしてください。
 
+## 依存関係を保守する
+
+通常のminor・patch更新をnpm・Go・GitHub Actionsごとにグループ化し、majorと
+セキュリティ更新は個別PRを維持します。共有SDK一式と現在のTrivy/SBOM Actionの
+例外・検証方法は[Dependency maintenance](SECURITY.md#dependency-maintenance)を参照してください。
+
+共通設定の更新元は
+`natade-coco-edge/game-platform/developer-kit/template/.github/dependabot.yml`です。
+この設定はEdge revision `e5124c0f0c7479978c99fbbc501871a8775bfd0a`から同期しています。
+今後はEdgeの生成元でレビューした変更を、公開GDKへ別の設定PRで反映します。
+同期時にはこのGDKの既存セキュリティ契約とCIを維持します。scanner・fixture・
+source-security/CodeQLは生成元スターターより先に導入されており、グループ化の
+反映だけで生成元の古いセキュリティ契約を同期したとは扱いません。
+
+新しい **Use this template** リポジトリには設定が引き継がれます。既存ゲームには
+後のテンプレート変更が自動反映されないため、
+[移行手順](docs/supply-chain-security-migration.md#maintain-dependabot-settings)に従い、
+レビュー済みの設定を個別PRで適用します。既存ゲームを再生成で上書きしません。
+
 ## 対象範囲と問い合わせ
 
 このリポジトリはk3s、Fleet、DNS、TLS、Wi-Fi、Launcher、Session Manager、

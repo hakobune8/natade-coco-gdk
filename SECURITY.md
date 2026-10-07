@@ -22,3 +22,33 @@ a fix is available. Do not include secrets in screenshots or attachments.
 Game content bugs, availability questions without a security boundary impact,
 and third-party service incidents belong in the normal issue tracker or the
 responsible provider's channel.
+
+## Dependency maintenance
+
+Dependabot checks npm, `/server` Go, and GitHub Actions weekly. Standard
+`groups` combine normal minor and patch updates within each ecosystem using
+`patterns: ["*"]`, `applies-to: version-updates`, and
+`update-types: [minor, patch]`. Normal major updates and security updates retain
+individual automatic PRs; urgent security fixes do not wait for a weekly group.
+
+The four `@natadecoco/*` packages are excluded from the npm group. Update them
+as one checksummed compatible set with `make update-platform` and
+`vendor/platform-set.json`; never replace individual archives or use public npm
+packages instead. Trivy and SBOM Actions are excluded because their current
+`0.x` releases require individual review of scanner behavior, vulnerability
+gates, and SPDX/CycloneDX output. These exclusions also keep patch updates
+individual and do not suppress their automatic PRs.
+
+The starter's external npm dependencies currently have stable majors and its Go
+server uses only the standard library. Review compatibility when adding a
+`0.x` dependency; if it needs separate validation, record its exact exclusion,
+reason, and checks in this policy. A minor or patch label does not establish
+compatibility. If a group fails or exceeds the configured lockfile review
+boundary, separate the failing updates instead of weakening the checks.
+
+Retain Action SHA/digest pins, overrides, schedules and PR limits, the
+source-security/audit/CodeQL gates, and release approval. Run
+`make setup security-check validate test lint build release-check` and
+`pnpm audit --audit-level moderate` for updates; verify scanner/SBOM behavior for
+the excluded Actions. This policy introduces neither automatic merging nor
+changes to personal notification settings.

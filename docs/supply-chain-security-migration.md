@@ -80,3 +80,25 @@ image vulnerability result together.
 - [ ] default-branch Ruleset readback matches the contract
 - [ ] release attestation binds the exact contract, source SHA, and image digest
 - [ ] every exception has a reason, owner, and expiry
+
+## Maintain Dependabot settings
+
+For a game that already satisfies its declared security contract, grouping can
+be adopted in a separate configuration-only PR. Use the Dependabot file from
+one reviewed immutable GDK revision as the reference. Preserve the game's
+existing ecosystems, directories, schedules, PR limits, pins, overrides,
+lockfile review boundary, and required checks; adapt the groups to those
+settings rather than overwriting the whole repository.
+
+Combine only normal minor/patch updates within each ecosystem. Keep normal
+major and security updates individual. Exclude `@natadecoco/*` from the normal
+npm group and retain the exact four-package platform-set update path. Review
+current `0.x` dependencies and record exclusions, reasons, and checks following
+[Dependency maintenance](../SECURITY.md#dependency-maintenance). Exclusions keep
+patch updates individual too; they do not ignore future updates.
+
+Verify the settings after identity initialization and run the existing local
+and CI gates before requesting review. Template changes do not automatically
+reach existing games, and initialization or SDK updates do not migrate their
+security contract. A contract upgrade still requires the complete same-revision
+bundle in section 1. Applying grouping alone does not establish compliance.
