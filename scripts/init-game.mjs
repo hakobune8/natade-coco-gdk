@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 
 const markerName = ".natadecoco-template.json";
 const excludedDirectories = new Set([".git", "node_modules", "vendor", "dist", "coverage", "tmp", "test-results"]);
+// This validator binds the unchanged vendor metadata to the upstream GDK.
+// Its repository URL is source provenance, not the descendant game's identity.
+const sourceProvenanceFiles = new Set(["scripts/validate-release.mjs"]);
 const textNames = new Set(["Dockerfile", "Makefile", ".dockerignore", ".gitignore"]);
 const textExtensions = new Set([".example", ".go", ".html", ".js", ".json", ".md", ".mjs", ".mod", ".ts", ".yaml", ".yml"]);
 const requiredIdentityFiles = ["game.yaml", "package.json", "vite.config.ts", "Dockerfile", "src/contract.ts", "server/go.mod", "deploy/chart/Chart.yaml", "deploy/fleet.yaml.example"];
@@ -101,7 +104,8 @@ async function listTextFiles(root, directory = root) {
     if (entry.name === markerName || (entry.isDirectory() && excludedDirectories.has(entry.name))) continue;
     const path = join(directory, entry.name);
     if (entry.isDirectory()) paths.push(...await listTextFiles(root, path));
-    else if (textNames.has(entry.name) || textExtensions.has(extname(entry.name))) paths.push(path);
+    else if (!sourceProvenanceFiles.has(path.slice(root.length + 1)) &&
+      (textNames.has(entry.name) || textExtensions.has(extname(entry.name)))) paths.push(path);
   }
   return paths;
 }
