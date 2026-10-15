@@ -4,6 +4,9 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Update the digest-pinned Go build image and CI toolchain to 1.26.9; retain
+  vulnerability enforcement and print failed scan findings for diagnosis.
+
 - Prepare 0.11.0 for Runtime 1.2 common game sync and Display recovery.
 - Keep authoritative score and input deduplication in a game StateAdapter;
   delegate IndexedDB ownership, initialization, save ordering, reconnection,
