@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { createRequire } from "node:module";
+import { preserveOptionalDependencies } from "./preserve-optional-dependencies.mjs";
 import { createHash } from "node:crypto";
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -70,7 +72,11 @@ try {
       packages: records
     }, null, 2)}\n`, "utf8");
 
+    const lockPath = join(candidate, "pnpm-lock.yaml");
+    const originalLock = await readFile(lockPath, "utf8");
+    const { parse } = createRequire(join(platformRoot, "package.json"))("yaml");
     run("pnpm", ["install", "--lockfile-only", "--offline"], candidate);
+    await writeFile(lockPath, preserveOptionalDependencies(originalLock, await readFile(lockPath, "utf8"), parse));
     run("pnpm", ["install", "--offline", "--frozen-lockfile"], candidate);
     for (const target of ["validate", "test", "lint", "build"]) run("make", [target], candidate);
 

@@ -114,3 +114,13 @@ context and the UI/input ownership boundary. Add browser tests for behavior that
 depends on layout, touch, reload, or reconnect. UI changes require a contact
 sheet; latency, device, and offline claims require evidence from the relevant
 environment.
+
+### Whole-set updates and native dependencies
+
+`make update-platform` takes Protocol, Controller SDK, Display SDK and Schema
+from one clean reviewed Platform source revision. Offline dependency resolution
+can omit cached metadata for another OS or CPU. The updater retains the exact
+unchanged optional dependency graph and its integrity values from the baseline
+lockfile before the frozen install. Changes to ordinary dependencies or retained
+optional versions fail the update and require an explicit dependency review.
+The helper does not select a different SDK set or re-resolve package versions.

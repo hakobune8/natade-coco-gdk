@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.0.tgz
+  '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.1.tgz
   fast-uri: 3.1.8
   nanoid: 3.3.18
   postcss: 8.5.26
@@ -15,17 +15,17 @@ importers:
   .:
     dependencies:
       '@natadecoco/controller-sdk':
-        specifier: file:vendor/natadecoco-controller-sdk-0.4.0.tgz
-        version: file:vendor/natadecoco-controller-sdk-0.4.0.tgz
+        specifier: file:vendor/natadecoco-controller-sdk-0.4.1.tgz
+        version: file:vendor/natadecoco-controller-sdk-0.4.1.tgz
       '@natadecoco/display-sdk':
-        specifier: file:vendor/natadecoco-display-sdk-0.3.0.tgz
-        version: file:vendor/natadecoco-display-sdk-0.3.0.tgz
+        specifier: file:vendor/natadecoco-display-sdk-0.3.1.tgz
+        version: file:vendor/natadecoco-display-sdk-0.3.1.tgz
       '@natadecoco/game-schema':
-        specifier: file:vendor/natadecoco-game-schema-0.3.0.tgz
-        version: file:vendor/natadecoco-game-schema-0.3.0.tgz
+        specifier: file:vendor/natadecoco-game-schema-0.3.1.tgz
+        version: file:vendor/natadecoco-game-schema-0.3.1.tgz
       '@natadecoco/protocol':
-        specifier: file:vendor/natadecoco-protocol-0.3.0.tgz
-        version: file:vendor/natadecoco-protocol-0.3.0.tgz
+        specifier: file:vendor/natadecoco-protocol-0.3.1.tgz
+        version: file:vendor/natadecoco-protocol-0.3.1.tgz
     devDependencies:
       '@types/node':
         specifier: 26.6.4
@@ -201,22 +201,22 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.4.0.tgz':
-    resolution: {integrity: sha512-O9R4cKi1eLgiwi3G3lcj7lYAOCmYYs2wGGpjJw7Y0Y4PW4s9pL+WP6UO1P9ZINRaVVLeA74i62uNQkyGVvGAwQ==, tarball: file:vendor/natadecoco-controller-sdk-0.4.0.tgz}
-    version: 0.4.0
+  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.4.1.tgz':
+    resolution: {integrity: sha512-4FkUOBooKvdH2qK0vhmO87nSDJBY7TOFt+f4n2K2Hy8NC/kBtC8QFXeam8CSIjrXE9eXorUNp8ZX9jkypd7/5g==, tarball: file:vendor/natadecoco-controller-sdk-0.4.1.tgz}
+    version: 0.4.1
 
-  '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.3.0.tgz':
-    resolution: {integrity: sha512-IYJEJCkVdEsoluo9ak4pk+M8L3B9du+hVp57HznVrJii5vyMBIBD0bh1iuXCU4+As/8MBUZQcXhUqZD97MdiXg==, tarball: file:vendor/natadecoco-display-sdk-0.3.0.tgz}
-    version: 0.3.0
+  '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.3.1.tgz':
+    resolution: {integrity: sha512-9UEPKilA3WzVsR8OsxCP9UmecFKrBJNyLw1vDvoOuZz6VT3hBgPgJHQPepqCV0iRb4hO96EVnksO8MMh4rs3Eg==, tarball: file:vendor/natadecoco-display-sdk-0.3.1.tgz}
+    version: 0.3.1
 
-  '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.3.0.tgz':
-    resolution: {integrity: sha512-KhFzVXT5XkSAMZn1m+oyQEgtH370YoN0khdegsBTZ0hQpCstr84nl4SLELCG3kiqRctC0mhlGd3VbACGONXPLw==, tarball: file:vendor/natadecoco-game-schema-0.3.0.tgz}
-    version: 0.3.0
+  '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.3.1.tgz':
+    resolution: {integrity: sha512-4VnArKy+7PsT8RwYqB5ShdshNxZi5Xmcf1mw5uUqa0wAhDiCYea0gkCBZj/7/iFME32ri3j9fPChhJ//tcu1bw==, tarball: file:vendor/natadecoco-game-schema-0.3.1.tgz}
+    version: 0.3.1
     hasBin: true
 
-  '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.3.0.tgz':
-    resolution: {integrity: sha512-0SsMCujEwpCYhrS5znxKmyPtfD7vqhEJY61CAqs9z7mxBqYZLzoum+zHhEc/JYdL8Vae0M5Rm5WPjIr9ddw1hQ==, tarball: file:vendor/natadecoco-protocol-0.3.0.tgz}
-    version: 0.3.0
+  '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.3.1.tgz':
+    resolution: {integrity: sha512-LjcbvPI2wWeYMO5qxwzpHcBCRxz1gn+lGQUqBQtbGAhhm8PSWCDMSS5Wors9XwMowd+u7v9dfTDLb29GA19huw==, tarball: file:vendor/natadecoco-protocol-0.3.1.tgz}
+    version: 0.3.1
 
   '@oxc-project/types@0.152.0':
     resolution: {integrity: sha512-oM/5rLBm2tPkg0iBgkH/FOeR3PCDpY19GTgAZjMFM8h9WI9VW7cLgzp6nwtarYKmovavIQZ+Fe/RKX/8C8O/Rw==}
@@ -716,20 +716,20 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.4.0.tgz':
+  '@natadecoco/controller-sdk@file:vendor/natadecoco-controller-sdk-0.4.1.tgz':
     dependencies:
-      '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.0.tgz
+      '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.1.tgz
 
-  '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.3.0.tgz':
+  '@natadecoco/display-sdk@file:vendor/natadecoco-display-sdk-0.3.1.tgz':
     dependencies:
-      '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.0.tgz
+      '@natadecoco/protocol': file:vendor/natadecoco-protocol-0.3.1.tgz
 
-  '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.3.0.tgz':
+  '@natadecoco/game-schema@file:vendor/natadecoco-game-schema-0.3.1.tgz':
     dependencies:
       ajv: 8.20.0
       yaml: 2.9.1
 
-  '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.3.0.tgz': {}
+  '@natadecoco/protocol@file:vendor/natadecoco-protocol-0.3.1.tgz': {}
 
   '@oxc-project/types@0.152.0': {}
 
