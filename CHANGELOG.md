@@ -9,8 +9,9 @@ All notable changes to this game repository are recorded here. Releases use SemV
   delegate IndexedDB ownership, initialization, save ordering, reconnection,
   view publication and terminal recovery to the common Display SDK.
 - Preserve the absolute run deadline and restore confirmed results read-only.
-- Publication requires the reviewed complete SDK set and matching GDK provenance;
-  local candidate SDK links are not a released dependency set.
+- Vendor all four SDK packages as one exact set from reviewed Edge PR #914,
+  merged at `6c08ecfe5df3dc96ab146a59c4a26282455d9e82` (Protocol/Display SDK/Schema
+  0.3.0, Controller SDK 0.4.0). Publication requires review and the matching GDK tag.
 
 ## [0.10.0]
 
