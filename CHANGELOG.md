@@ -4,6 +4,20 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Update the digest-pinned Go build image and CI toolchain to 1.26.9; retain
+  vulnerability enforcement and print failed scan findings for diagnosis.
+
+- Prepare 0.11.0 for Runtime 1.2 common game sync and Display recovery.
+- Keep authoritative score and input deduplication in a game StateAdapter;
+  delegate IndexedDB ownership, initialization, save ordering, reconnection,
+  view publication and terminal recovery to the common Display SDK.
+- Preserve the absolute run deadline and restore confirmed results read-only.
+- Vendor all four SDK packages as one exact set from reviewed Edge PR #914,
+  merged at `6c08ecfe5df3dc96ab146a59c4a26282455d9e82` (Protocol/Display SDK/Schema
+  0.3.0, Controller SDK 0.4.0). Publication requires review and the matching GDK tag.
+
+## [0.10.0]
+
 - Pin the existing fast-uri override to 3.1.8 to pass the dependency audit.
 - Prepare 0.10.0 for the Platform-owned Controller contract. Production game
   routes redirect to `/controller/` without reading participant credentials.

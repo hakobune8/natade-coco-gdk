@@ -2,10 +2,17 @@
 
 ## Runtime mental model
 
-The Display SDK subscribes to players, session state, and latest controller
-input. The Platform Controller handles authenticated WebSocket connection, sequence,
-input scheduling, heartbeat, and reconnect. The game SDK provides UI/input contracts. Game code maps semantic input to
-game rules and submits one idempotent result for the active run.
+Displayのゲーム状態の正本はブラウザメモリにある。共通Display SDKが
+`natadecoco-display-state` v1へgameId / sessionId / runId単位で保存し、
+所有権、初期化、復元、保存の直列化、再接続、必要ビューの公開と同期完了を管理する。
+ゲームはStateAdapterに初期状態、ルール、形式検証、ビュー生成を定義する。
+保存が欠けたり壊れたりしたrunを新規ゲームとして続行しない。
+
+Controllerは共通state/eventを使う。`sendInput`は標準入力の共通stateヘルパーで、
+独立した旧通信経路を追加しない。スターターはこの標準入力を使い、独自UIは
+契約2の限定クライアントからゲーム固有の `sendEvent` / `sendState` を呼べる。
+ゲーム固有のサーバーが正本を持つ場合はそれを維持し、再取得できるデータを
+Displayに二重保存しない。
 
 Do not build a second room, token, player-slot, or WebSocket system inside the
 game container. Doing so breaks Launcher, reconnect, observability, and rollout
@@ -56,7 +63,7 @@ platform sets, and release metadata mismatches.
 ## Display rules
 
 - Design for 1920×1080, but keep layout stable at smaller development sizes.
-- Rebuild from the SDK snapshot after reload or reconnect.
+- 復元と同期完了を待って描画し、同一Displayの通信再接続で最新メモリを巻き戻さない。
 - Keep game completion idempotent and bound to the current run.
 - Schedule the gameplay deadline from the wall clock independently of rendering
   or `requestAnimationFrame`, then submit `finishGame` exactly once. The Runtime
@@ -70,11 +77,11 @@ platform sets, and release metadata mismatches.
 ## Controller rules
 
 - Declare `controllerImplementation`. The starter uses `platform-profile` with
-  `directional-pad`; use `game-module` v1 for custom controls.
+  `directional-pad`; use `game-module` v2 for custom controls.
 - Launcher and Join Page pass the validated same-tab handoff to `/controller/`.
   Game routes only redirect there and never consume or refresh credentials.
-- A custom module receives `ControllerUIModuleContext` and renders into its
-  content element using the restricted `GameUIControllerClient`. Release UI
+- A custom module receives `ControllerUIModuleContextV2` and renders into its
+  content element using the restricted `GameUIControllerClientV2`. Release UI
   subscriptions in `destroy()` and consume `onPlatformSnapshot` for presentation.
 - Platform owns the frame, heartbeat, WSS/WebRTC, host operations, reconnect,
   orientation, and session return. Game modules do not start those operations.

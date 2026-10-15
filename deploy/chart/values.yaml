@@ -12,11 +12,11 @@ game:
     spec:
       displayName: natadeCOCO GDK Reference
       description: Runnable reference for independent natadeCOCO multiplayer games
-      version: 0.10.0
-      runtimeCompatibility: ">=1.0.0 <2.0.0"
+      version: 0.11.0
+      runtimeCompatibility: ">=1.2.0 <2.0.0"
       image:
         repository: registry.example.invalid/natadecoco/gdk-reference
-        tag: 0.10.0
+        tag: 0.11.0
         digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
       players: { min: 1, max: 4 }
       endpoints:
@@ -28,6 +28,14 @@ game:
         controllerImplementation:
           kind: platform-profile
           profile: directional-pad
+        gameSync:
+          contractVersion: 1
+          authority: display
+          requiredStates: [phase]
+        displayRecovery:
+          contractVersion: 1
+          mode: indexeddb
+          stateSchemaVersion: 1
         orientation: any
         offlineCapable: true
       session:
