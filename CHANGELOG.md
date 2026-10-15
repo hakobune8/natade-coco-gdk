@@ -4,6 +4,16 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Prepare 0.11.0 for Runtime 1.2 common game sync and Display recovery.
+- Keep authoritative score and input deduplication in a game StateAdapter;
+  delegate IndexedDB ownership, initialization, save ordering, reconnection,
+  view publication and terminal recovery to the common Display SDK.
+- Preserve the absolute run deadline and restore confirmed results read-only.
+- Publication requires the reviewed complete SDK set and matching GDK provenance;
+  local candidate SDK links are not a released dependency set.
+
+## [0.10.0]
+
 - Pin the existing fast-uri override to 3.1.8 to pass the dependency audit.
 - Prepare 0.10.0 for the Platform-owned Controller contract. Production game
   routes redirect to `/controller/` without reading participant credentials.

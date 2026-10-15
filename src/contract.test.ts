@@ -12,8 +12,8 @@ test("reads the platform run without exposing operator credentials", async () =>
   const state = await platformSession(async (input, init) => {
     endpoint = String(input);
     assert.equal(init?.credentials, "same-origin");
-    return new Response(JSON.stringify({ session: { state: "finished", runId: "run-1" } }), { status: 200, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ session: { state: "finished", runId: "run-1", sessionId: "session-1", gameId: "gdk-reference", players: [] } }), { status: 200, headers: { "Content-Type": "application/json" } });
   });
-  assert.deepEqual(state, { state: "finished", runId: "run-1" });
+  assert.deepEqual(state, { state: "finished", runId: "run-1", sessionId: "session-1", gameId: "gdk-reference", players: [] });
   assert.equal(endpoint, "/launcher-api/v1/session");
 });
