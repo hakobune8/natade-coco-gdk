@@ -4,6 +4,24 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.11.2] - 2026-10-16
+
+- Preserve unchanged optional OS/CPU dependencies and their exact locked closure
+  during whole-set SDK updates; fail if the ordinary or retained optional graph changed.
+- Adopt the shared clock freshness correction from reviewed Edge #924, merged at
+  `d3439d288a8d1b9182ebbea919996fba63326f42`, and the final-view-before-finish
+  ordering correction in reviewed Edge #925, merged at
+  `8c1c0cf758518b294ef40316aac69bc9c7d6db79`, as one complete package set:
+  Protocol/Display SDK/Schema 0.3.2 and Controller SDK 0.4.2.
+  The published 0.11.0 release remains immutable.
+- Use Game Chart 0.5.0 for paired Controller contract 2 manifests. Fix the
+  complete package set to reviewed Edge #929 merge
+  `805090b86f33683280295f95af6bc99db1d8cefa`, including Edge #928 deployment
+  contract fixes and the Coco Rush image version correction. All four SDK
+  archives remain byte-identical to the Edge #925 set.
+
+## [0.11.0]
+
 - Update the digest-pinned Go build image and CI toolchain to 1.26.9; retain
   vulnerability enforcement and print failed scan findings for diagnosis.
 
