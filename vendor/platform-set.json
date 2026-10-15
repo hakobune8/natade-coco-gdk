@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/SSLHQ/natade-coco-edge",
-    "revision": "1423f1adc87462414629d792497af568189a53b5"
+    "revision": "805090b86f33683280295f95af6bc99db1d8cefa"
   },
   "packages": {
     "@natadecoco/protocol": {
