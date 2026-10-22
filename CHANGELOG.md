@@ -4,6 +4,19 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+## [0.12.0] - Unreleased
+
+- Prepare the complete platform set from Edge #938 candidate
+  `b35b2f768b18f058768cea3151744e2f48a6d448`: Display reconnects obtain
+  the current run ticket and safely retry temporary ticket-fetch failures.
+  Start/rematch fences are preparation transitions in the platform Shell;
+  actual connection failures remain visible.
+- Adopt Protocol/Display SDK 0.4.0, Controller SDK 0.5.0 and Schema 0.3.2
+  together. These versions also include the existing removal of legacy game-owned
+  Controller connections; adopters must use the platform-owned Controller UI contract.
+- This is release preparation. No Git tag, published package or deployment is
+  created by this change.
+
 - Use Go 1.26.10 in the module, CI and digest-pinned builder to include the standard-library security fix already adopted by Kart.
 
 - Consolidate Dependabot updates (#66, #65) against current main, retaining the published SDK set and exact dependency/Action pins.
