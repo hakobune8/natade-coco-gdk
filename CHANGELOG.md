@@ -4,6 +4,10 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Use Go 1.26.10 in the module, CI and digest-pinned builder to include the standard-library security fix already adopted by Kart.
+
+- Consolidate Dependabot updates (#66, #65) against current main, retaining the published SDK set and exact dependency/Action pins.
+
 ## [0.11.2] - 2026-10-16
 
 - Preserve unchanged optional OS/CPU dependencies and their exact locked closure
