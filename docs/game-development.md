@@ -90,6 +90,14 @@ platform sets, and release metadata mismatches.
 - Never put credentials in a URL or localStorage. The module has no token.
 - On `finished`, disable game input. Platform exposes authorized rematch/end
   actions and creates a fresh run ID. Reset Display game state for the new run.
+  The Display SDK obtains a current-run ticket before each automatic reconnect,
+  including the normal start/rematch fence. In `onSnapshot`, use the new run's
+  authoritative metadata, close the previous recovery owner, and initialize or
+  restore that run before publishing its required Controller state. An SDK
+  reconnect must not depend on a game-owned HTTP polling loop to refresh credentials.
+  Expected run changes show preparation status in the platform Shell; real
+  connection failures still show their connectivity notice. Keep controls disabled
+  until the new run and its required state are synchronized.
 - The local preview renders controls against the SDK's development input facade;
   it does not mount a production Shell or emulate organizer authority.
 
