@@ -4,6 +4,10 @@ All notable changes to this game repository are recorded here. Releases use SemV
 
 ## [Unreleased]
 
+- Adopt the reviewed common demo v1 platform set from Edge #1106.
+- Export a Controller UI v2 module and provide game-owned Display/Controller
+  demo drivers; start with `&demo=1` on the existing Display URL.
+
 ## [0.12.0] - 2026-10-27
 
 - Publish the complete platform set from reviewed Edge #1016 (Edge #938), merged at

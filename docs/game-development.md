@@ -76,8 +76,8 @@ platform sets, and release metadata mismatches.
 
 ## Controller rules
 
-- Declare `controllerImplementation`. The starter uses `platform-profile` with
-  `directional-pad`; use `game-module` v2 for custom controls.
+- Declare `controllerImplementation`. The starter exports a `game-module` v2 that
+  mounts the SDK `directional-pad` profile UI and supplies a demo driver.
 - Launcher and Join Page pass the validated same-tab handoff to `/controller/`.
   Game routes only redirect there and never consume or refresh credentials.
 - A custom module receives `ControllerUIModuleContextV2` and renders into its
@@ -132,3 +132,39 @@ unchanged optional dependency graph and its integrity values from the baseline
 lockfile before the frozen install. Changes to ordinary dependencies or retained
 optional versions fail the update and require an explicit dependency review.
 The helper does not select a different SDK set or re-resolve package versions.
+
+## Automatic demo contract
+
+The starter declares `spec.demo: { contractVersion: 1, maxDurationSeconds: 120 }`.
+Use a Runtime with demo-v1 support, create/join/start the normal session, then
+append `&demo=1` to its existing Display URL. Controllers switch through the
+Platform connection; they need no URL flag or additional start button.
+Remove the flag or use `demo=0` to resume normal input on the same board/run.
+This is an authenticated session feature, separate from Vite's local previews.
+
+The Display registers `demo: { driver }` with `createDisplayClient`.
+The Controller module returns its `demo` driver from `mountControllerUI`.
+Each driver declares `contractVersion: 1` and implements prepare/run/stop.
+Prepare from the current game state; do not reset the board or create players.
+Only the Display driver completing, or a normal game finish, completes the demo.
+
+Use `context.sleep` for abortable waits and `context.perform(() => normalAction())`
+for automatic input. The helper checks the current run, generation and sync state
+before invoking the same ordinary input/action used by human players. Cancel any
+additional timers/subscriptions in the idempotent stop callback. A stopped or stale
+driver must never submit delayed input. Never inspect another player's secrets.
+
+On cancellation the SDK aborts the context and releases standard input immediately.
+It waits for the old prepare to resolve or reject, then calls that same driver's
+stop. Another generation or replacement module cannot prepare until both finish.
+Prepare must respond to AbortSignal and settle without waiting for stop; stop must
+also release resources registered by preparation that completes after abort.
+Cancellation-related rejection does not become a separate preparation failure.
+If preparation settlement plus stop takes more than five seconds, demo fails and
+this client cannot start another prepare. Late preparation is still cleaned up
+when it eventually settles; recreate the client after fixing the driver.
+
+`client.demo` exposes getState/onState and getError/onError. Missing drivers,
+unsupported Runtime capabilities, preparation timeout and driver failures stop the
+demo independently of ordinary gameplay. This starter does not implement recording
+registration, final-frame holding, subtitles or a video output pipeline.

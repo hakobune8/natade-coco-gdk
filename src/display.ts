@@ -21,6 +21,12 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
   }
   const ticket = await requestDisplayTicket();
   const client = createDisplayClient({ ...launch, gameVersion: GAME_VERSION, gameSync: GAME_SYNC,
+    demo: { driver: {
+      contractVersion: 1,
+      async prepare() { recovery.getCurrentState(); },
+      async run(context) { while (recovery.getCurrentState().phase !== "finished") await context.sleep(100); },
+      stop() {}
+    } },
     displayTicket: ticket.token, ticketProvider: async () => (await requestDisplayTicket()).token });
   const recovery = client.createRecovery<GameState>({ project: (state) => [{ operation: "put", name: "phase",
     target: { kind: "all-controllers" }, payload: { phase: state.phase, endsAt: state.startedAt + GAME_DURATION_MS } }] });
@@ -97,6 +103,9 @@ export async function runDisplay(root: HTMLElement, launch: LaunchContext): Prom
     const state = recovery.getCurrentState(), sync = client.getSyncStatus(), clock = client.getServerTimeEstimate();
     if (!clock.stale && clock.serverTime !== null) lastRemaining = Math.max(0, state.startedAt + GAME_DURATION_MS - clock.serverTime);
     renderDisplay(root, players, inputs, new Map(Object.entries(state.scores)), lastRemaining);
+    const demo = client.demo?.getState();
+    if (client.demo?.getError()) root.insertAdjacentHTML("beforeend", '<p role="status">デモを進行できません。URLの指定とControllerの接続を確認してください。</p>');
+    else if (demo?.phase === "preparing") root.insertAdjacentHTML("beforeend", '<p role="status">デモを準備しています…</p>');
     if (sync.state !== "ready" || clock.stale) root.insertAdjacentHTML("beforeend", '<p role="status">ゲームの状態を同期しています…</p>');
     window.requestAnimationFrame(frame);
   };
