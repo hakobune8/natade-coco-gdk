@@ -1,0 +1,2 @@
+.starter-controller { display: flex; flex-direction: column; height: 100%; color: #eef9ff; background: #102333; padding: 12px; box-sizing: border-box; }
+.starter-controller .control-surface { flex: 1; min-height: 0; }
