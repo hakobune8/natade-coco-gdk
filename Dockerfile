@@ -5,6 +5,7 @@ FROM ${NODE_IMAGE} AS web
 WORKDIR /src
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.ts index.html ./
 COPY vendor ./vendor
+COPY scripts/validate-controller-module.mjs ./scripts/validate-controller-module.mjs
 COPY src ./src
 RUN corepack enable && corepack prepare pnpm@10.14.0 --activate && pnpm install --frozen-lockfile
 RUN pnpm build

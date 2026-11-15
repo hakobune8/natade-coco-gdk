@@ -16,6 +16,7 @@ spec:
   image:
     repository: registry.example.invalid/natadecoco/gdk-reference
     tag: 0.12.0
+  demo: { contractVersion: 1, maxDurationSeconds: 120 }
   players: { min: 1, max: 4 }
   endpoints:
     displayPath: /games/gdk-reference/display
@@ -24,8 +25,10 @@ spec:
     transport: websocket
     controllerProfile: directional-pad
     controllerImplementation:
-      kind: platform-profile
-      profile: directional-pad
+      kind: game-module
+      contractVersion: 2
+      modulePath: /games/gdk-reference/controller-ui.js
+      stylesheetPath: /games/gdk-reference/controller-ui.css
     gameSync:
       contractVersion: 1
       authority: display

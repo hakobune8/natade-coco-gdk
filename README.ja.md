@@ -145,3 +145,11 @@ SDKの破壊的変更はゲームソースを編集してから
 `node scripts/update-platform.mjs <edge-path> --with-working-tree`で更新します。
 編集後のソースと4パッケージを一時候補で検証し、成功した場合だけvendorを置き換えます。
 Platform側のcheckoutはクリーンな状態が必要です。
+
+## 自動デモ
+
+通常のセッションを開始後、Displayの既存URLへ `&demo=1` を追加すると、
+DisplayとControllerが共通デモv1で自動進行します。Controller側のURL変更や開始ボタンは不要です。
+`demo=0` または指定の削除で、同じ盤面・runの手動操作へ戻ります。
+録画ツールや将来のPVツールはゲーム固有のDOM操作を持たず、この入口を利用できます。
+[ドライバ実装と停止時の契約](docs/game-development.md#automatic-demo-contract)を参照してください。
