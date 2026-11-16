@@ -62,6 +62,8 @@ jobs:
         env:
           TRIVY_INCLUDE_DEV_DEPS: "true"
         with:
+          # Avoid slow Actions DB-cache restore/save; Trivy still downloads its DB.
+          cache: false
           scan-type: fs
           scan-ref: .
           scanners: vuln
