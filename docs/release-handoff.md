@@ -11,7 +11,8 @@ Provide all of the following together:
 2. reviewed full Git SHA and a matching `v<version>` source tag;
 3. OCI image reference using the SemVer tag and registry-reported digest;
 4. SPDX and CycloneDX SBOMs;
-5. source-security, moderate dependency audit, and CodeQL results for the same
+5. source-security, moderate dependency audit, and source static-analysis
+   results/coverage for the same
    revision;
 6. fixed HIGH/CRITICAL image vulnerability scan result;
 7. default-branch Ruleset readback and the reviewed exception list;
@@ -43,7 +44,8 @@ Never use `latest`, a mutable digest placeholder, or unreviewed Fleet targeting.
 The operator verifies provenance and the generated compatibility attestation,
 replaces the fail-closed Registry/Chart/digest placeholders, selects an approved
 game profile and RuntimeClass, and performs a session-aware rollout. The game
-repository does not receive cluster credentials or activate its own Fleet target.
+repository does not receive cluster credentials or activate its own Fleet
+target.
 
 If health or compatibility fails, the Catalog must keep the game Not Ready and
 the operator restores the previous reviewed digest. See `deploy/README.md` for

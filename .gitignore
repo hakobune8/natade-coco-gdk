@@ -5,3 +5,6 @@ playwright-report/
 test-results/
 *.log
 .DS_Store
+
+# Private source-analysis evidence; CI artifacts only.
+source-static-analysis/

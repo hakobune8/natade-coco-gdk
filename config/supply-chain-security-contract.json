@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "1.0.0",
+  "contractVersion": "2.0.0",
   "unicode": {
     "ignoredPaths": [
       {
@@ -31,15 +31,7 @@
       "ubuntu-24.04"
     ],
     "selfHostedRunnerLabelAllowlist": [],
-    "allowedWritePermissions": {
-      ".github/workflows/ci.yml:codeql": {
-        "scopes": [
-          "security-events"
-        ],
-        "reason": "Upload CodeQL results for the exact analyzed revision",
-        "owner": "GDK Maintainers"
-      }
-    }
+    "allowedWritePermissions": {}
   },
   "dependencies": {
     "lockfiles": [
@@ -47,5 +39,10 @@
     ],
     "maximumChangedLinesPerLockfile": 2000,
     "lifecycleScriptAllowlist": []
+  },
+  "sourceStaticAnalysis": {
+    "profileSha256": "2f0a2224e970edcc0e909c48f36b15aa658a6cc8f2da417d7f31bd9dfd3d46e2",
+    "rulesSha256": "97b3c7ba08ff9386f45ed30b3b7fb293a551bdac4fe6be51aba8891965c669cb",
+    "coverageDocumentSha256": "3b2cd42cb8b731c39ccc109feb64d35035295426949ad5a4e53e2f58cc1583c1"
   }
 }

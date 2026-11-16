@@ -61,3 +61,9 @@ container-build: ## Build the immutable game image locally
 
 clean: ## Remove generated build output
 	@rm -r dist 2>/dev/null || true
+
+.PHONY: static-analysis
+static-analysis: ## Run the pinned source security profile and rule fixtures
+	@python3 -B scripts/test_source_static_analysis.py
+	@python3 -B scripts/source-static-analysis.py --test-rules
+	@python3 -B scripts/source-static-analysis.py

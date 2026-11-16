@@ -5,3 +5,8 @@ scripts/supply-chain-security.mjs @kazyamaz200
 scripts/validate-release.mjs @kazyamaz200
 docs/release-policy.md @kazyamaz200
 docs/release-handoff.md @kazyamaz200
+
+/config/static-analysis/ @kazyamaz200
+/scripts/source-static-analysis.py @kazyamaz200
+/scripts/test_source_static_analysis.py @kazyamaz200
+/docs/source-static-analysis.md @kazyamaz200

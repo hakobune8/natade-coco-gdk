@@ -7,3 +7,6 @@ playwright-report
 test-results
 deploy
 *.log
+
+# Private source-analysis evidence; CI artifacts only.
+source-static-analysis/

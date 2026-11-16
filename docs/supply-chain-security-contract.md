@@ -1,9 +1,10 @@
 # Supply-chain security contract
 
-Contract version: `1.0.0`
+Contract version: `2.0.0`
 
 This document is normative for the GDK, newly generated games, compatible
-existing games, and release handoff. `config/supply-chain-security-contract.json`
+existing games, and release handoff.
+`config/supply-chain-security-contract.json`
 is the machine-readable declaration for this version. A game may implement an
 equivalent control, but it must retain machine-verifiable evidence with the same
 failure condition. Silent or permanent exceptions are not compatible.
@@ -21,13 +22,17 @@ revision must pass all of these controls:
 3. Default workflow permissions to `contents: read` or `{}` and allow write
    scopes only for a named job and purpose.
 4. Reject executable `pull_request_target` workflows. Pull-request jobs must use
-   a literal reviewed runner and must not inherit or reference repository secrets.
+   a literal reviewed runner and must not inherit or reference repository
+secrets.
 5. Reject undeclared package lifecycle scripts, lockfile deletion, and lockfile
    changes too large for the configured review boundary.
 6. Fail on moderate or higher known dependency vulnerabilities using Dependency
    Review or an equivalent lockfile-aware audit.
-7. Run CodeQL for supported languages, or document an equivalent static-analysis
-   gate and retain its result.
+7. Run the versioned source static-analysis profile, retain its result and
+   declared coverage/gaps, and fail on findings or incomplete analysis. CodeQL
+   is optional additional coverage only when its private-code use is permitted.
+   See [the source profile](source-static-analysis.md); the baseline does not
+   claim CodeQL-equivalent analysis.
 8. Protect the default branch with pull requests, required security checks,
    force-push prohibition, and branch-deletion prohibition.
 
@@ -97,3 +102,15 @@ repository compatible, record a settings readback showing:
   designated maintainer review;
 - private vulnerability reporting and dependency alerts are enabled;
 - bypass use is limited and auditable.
+
+## Contract 2.0 migration
+
+This revision replaces the former CodeQL-or-equivalent requirement with an
+explicit, bounded common
+source profile. This is an incompatible contract change, not a claim that
+contract 1.0.0 coverage is unchanged. Import the complete reviewed profile and
+its fixtures; bind its hashes under `sourceStaticAnalysis` in this contract.
+The existing release attestation binds this contract file and therefore those
+profile hashes. Operator acceptance and a newly qualified immutable release
+remain separate; existing tags, SDK sets, deployed images and attestations are
+not rewritten or automatically approved.
