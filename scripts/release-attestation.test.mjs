@@ -19,7 +19,7 @@ test("generates an Edge-consumable release attestation", () => {
   assert.equal(attestation.game.source.revision, sourceRevision);
   assert.equal(attestation.image.digest, digest);
   assert.equal(attestation.gdk.version, "0.12.0");
-  assert.equal(attestation.gdk.securityContract.version, "1.0.0");
+  assert.equal(attestation.gdk.securityContract.version, "2.0.0");
   assert.match(attestation.gdk.securityContract.sha256, /^[0-9a-f]{64}$/);
   assert.equal(attestation.gdk.platformSet.sha256,
     createHash("sha256").update(readFileSync("vendor/platform-set.json")).digest("hex"));

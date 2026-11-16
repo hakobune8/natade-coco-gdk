@@ -1,7 +1,7 @@
 # Supply-chain security migration
 
 This guide upgrades an existing compatible game to supply-chain security
-contract `1.0.0`. It deliberately avoids repository-specific links so it is
+contract `2.0.0`. It deliberately avoids repository-specific links so it is
 safe to use from public and private games.
 
 ## 1. Import the contract as one reviewed change
@@ -12,7 +12,9 @@ Copy these files from the same immutable GDK revision:
 - `scripts/supply-chain-security.mjs`
 - `scripts/supply-chain-security.test.mjs`
 - `.github/dependabot.yml`
-- the source-security and CodeQL jobs from `.github/workflows/ci.yml`
+- the complete source-security job from `.github/workflows/ci.yml`
+- `config/static-analysis/`, `scripts/source-static-analysis.py`,
+  `scripts/test_source_static_analysis.py`, and `docs/source-static-analysis.md`
 
 Add the exact `yaml` dependency and regenerate the lockfile with the pinned
 package manager. Do not copy individual detector fragments from different GDK
@@ -44,12 +46,13 @@ secret, SSH key, long-lived PAT, or release credential in a pull-request job.
 
 ## 4. Protect the repository
 
-After the workflow exists on the default branch, configure the Ruleset. Requiring
-a check before that check exists can make the branch unmergeable, so use this
-order:
+After the workflow exists on the default branch, configure the Ruleset.
+Requiring a check before it exists can make the branch unmergeable, so use
+this order:
 
 1. merge the source-security workflow through the current protected path;
-2. require `source-security`, validation, CodeQL, and existing test checks;
+2. require `source-security` (including static analysis), validation, and
+   existing test checks;
 3. require pull requests and designated review for workflow/lockfile changes;
 4. prohibit force-push and branch deletion;
 5. enable dependency alerts and private vulnerability reporting;
@@ -61,15 +64,15 @@ Run the full gate on the exact release commit:
 
 ```bash
 make setup
-make security-check validate test lint build release-check
+make security-check static-analysis validate test lint build release-check
 pnpm audit --audit-level moderate
 ```
 
 Generate the release attestation only after the immutable OCI digest is known.
 Verify that its security-contract version and SHA-256 match the checked-out GDK
 contract. Record lifecycle-script exceptions, Unicode exceptions, Ruleset
-readback, audit result, CodeQL result, source revision, OCI digest, SBOM, and
-image vulnerability result together.
+readback, audit result, source-analysis result and coverage, source revision,
+OCI digest, SBOM, and image vulnerability result together.
 
 ## Completion checklist
 

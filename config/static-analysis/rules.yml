@@ -1,0 +1,95 @@
+# SPDX-License-Identifier: MIT
+# Original natadeCOCO baseline rules; no Semgrep Registry/Pro rules are bundled.
+rules:
+  - id: natadecoco.js-dynamic-code
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Do not evaluate JavaScript source strings; use explicit functions or JSON parsing.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+      - pattern: Function(...)
+  - id: natadecoco.js-tls-verification-disabled
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: TLS certificate verification must remain enabled.
+    pattern: "{..., rejectUnauthorized: false, ...}"
+  - id: natadecoco.js-input-to-html
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Untrusted request or URL input reaches an HTML sink. Use textContent or reviewed sanitization.
+    mode: taint
+    pattern-sources: &js-input
+      - pattern: $REQ.query
+      - pattern: $REQ.body
+      - pattern: $REQ.params
+      - pattern: location.search
+      - pattern: location.hash
+      - pattern: window.location.search
+      - pattern: window.location.hash
+    pattern-sinks:
+      - pattern: $EL.innerHTML = $VALUE
+      - pattern: $EL.outerHTML = $VALUE
+      - pattern: $EL.insertAdjacentHTML($WHERE, $VALUE)
+      - pattern: document.write(...)
+  - id: natadecoco.js-input-to-shell
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Untrusted request or URL input reaches a shell. Use an executable and separate arguments.
+    mode: taint
+    pattern-sources: *js-input
+    pattern-sinks:
+      - pattern: child_process.exec($CMD, ...)
+      - pattern: child_process.execSync($CMD, ...)
+  - id: natadecoco.js-input-to-fetch
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Untrusted request or URL input selects a fetch destination. Validate against an explicit destination allowlist.
+    mode: taint
+    pattern-sources: *js-input
+    pattern-sinks:
+      - pattern: fetch($URL, ...)
+  - id: natadecoco.go-tls-verification-disabled
+    languages: [go]
+    severity: ERROR
+    message: TLS certificate verification must remain enabled.
+    pattern: "tls.Config{..., InsecureSkipVerify: true, ...}"
+  - id: natadecoco.go-input-to-shell
+    languages: [go]
+    severity: ERROR
+    message: Untrusted HTTP input reaches a shell command. Use an executable and separate arguments.
+    mode: taint
+    pattern-sources: &go-input
+      - pattern: $REQ.FormValue(...)
+      - pattern: $REQ.PostFormValue(...)
+      - pattern: $REQ.URL.Query().Get(...)
+      - pattern: $REQ.URL.Path
+    pattern-sinks:
+      - pattern: exec.Command("sh", "-c", $CMD, ...)
+      - pattern: exec.Command("bash", "-c", $CMD, ...)
+      - pattern: exec.CommandContext($CTX, "sh", "-c", $CMD, ...)
+      - pattern: exec.CommandContext($CTX, "bash", "-c", $CMD, ...)
+  - id: natadecoco.go-input-to-sql
+    languages: [go]
+    severity: ERROR
+    message: Untrusted HTTP input reaches SQL text. Use parameterized queries.
+    mode: taint
+    pattern-sources: *go-input
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $DB.Query($SQL, ...)
+              - pattern: $DB.QueryRow($SQL, ...)
+              - pattern: $DB.Exec($SQL, ...)
+              - pattern: $DB.QueryContext($CTX, $SQL, ...)
+              - pattern: $DB.QueryRowContext($CTX, $SQL, ...)
+              - pattern: $DB.ExecContext($CTX, $SQL, ...)
+          - focus-metavariable: $SQL
+  - id: natadecoco.go-input-to-html
+    languages: [go]
+    severity: ERROR
+    message: Untrusted HTTP input bypasses template HTML escaping.
+    mode: taint
+    pattern-sources: *go-input
+    pattern-sinks:
+      - pattern: template.HTML($VALUE)
