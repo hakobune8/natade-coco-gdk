@@ -122,7 +122,8 @@ def main():
         "passed": False,
     }
     try:
-        with tempfile.TemporaryDirectory(prefix="natadecoco-semgrep-") as temporary:
+        # ARC/DinD shares the workspace with Docker, but not the runner's /tmp.
+        with tempfile.TemporaryDirectory(prefix=".semgrep-", dir=output) as temporary:
             temporary_path = Path(temporary)
             env = {key: value for key, value in os.environ.items() if not key.startswith("SEMGREP_")}
             env.update(SEMGREP_SEND_METRICS="off", SEMGREP_ENABLE_VERSION_CHECK="0")
@@ -155,6 +156,8 @@ def main():
             (output / "stderr.log").write_text(result.stderr)
             evidence["exitCode"] = result.returncode
             evidence["passed"] = result.returncode == 0
+            if result.returncode not in (0, 1):
+                raise ValueError(f"Semgrep command failed ({result.returncode}): {result.stderr.strip()}")
             for name in ("semgrep.json", "semgrep.sarif"):
                 (output / name).write_bytes((temporary_path / name).read_bytes())
             report = json.loads((output / "semgrep.json").read_text())
